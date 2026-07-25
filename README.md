@@ -2,7 +2,7 @@
 
 A lightweight agent skill set for shipping features: **brainstorm → spec → plan → build → review**.
 
-Nine skills, no hooks, no session-start injection, no framework. The model picks them up when they apply, the same way it picks up any other skill.
+Ten skills, no hooks, no session-start injection, no framework. The model picks them up when they apply, the same way it picks up any other skill.
 
 ## Install
 
@@ -45,8 +45,9 @@ brainstorm ──┬─→ (just thinking, stop here)
 | `tdd` | Any feature, bugfix, or behavior change. |
 | `request-review` | Implementation is done. One reviewer subagent over the whole branch. |
 | `finish-branch` | Reviewed and green. Merge, PR, or keep. |
+| `using-ultra-instinct` | Not a step — a brief on the suite, loaded when asked about it or unsure which skill fits. |
 
-Nothing forces you through all nine. `tdd` and `mockup` are useful alone. `brainstorm` often ends at "now I understand the problem." The chain exists for work big enough to need it.
+Nothing forces you through all nine steps. `tdd` and `mockup` are useful alone. `brainstorm` often ends at "now I understand the problem." The chain exists for work big enough to need it.
 
 ## Design choices
 
