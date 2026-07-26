@@ -71,8 +71,10 @@ Show them together so they can be compared, say which you'd pick and why, and ma
 
 Note the winning path and one line on why it won. Then it stops being scratch:
 
-- `write-design-spec` moves it into `docs/design/YYYY-MM-DD/assets/` and links it from the Visuals section
+- `write-design-spec` moves the file into `docs/design/YYYY-MM-DD/assets/` and links it from the Visuals section
 - `write-plan` points the frontend tasks at it, so whoever builds the UI is looking at the thing they're building
+
+What moves is **this file, unchanged** — not a rebuilt version of it. The value of a committed mockup is that it's the artifact the user actually approved.
 
 Don't move it yourself here — there's no branch yet. Rejected takes stay in `.mockups/`.
 

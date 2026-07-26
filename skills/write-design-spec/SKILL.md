@@ -17,7 +17,17 @@ This file is the work's first committed artifact. Before creating it, use `isola
 
 Design doc, plan, and implementation all live on the same branch, so the branch tells the whole story.
 
-**Bring the visuals in now.** Mockups from brainstorming were built in the project but left uncommitted, so exploring three takes wouldn't force a branch before anyone committed to building. Now that the branch exists, move the chosen one into `docs/design/YYYY-MM-DD/assets/` and link it from Visuals. Leave the rejected takes in scratch.
+**Bring the visuals in now.** Mockups from brainstorming were built in the project but left uncommitted, so exploring three takes wouldn't force a branch before anyone committed to building. Now that the branch exists, the chosen one gets committed:
+
+```bash
+mkdir -p docs/design/YYYY-MM-DD/assets
+mv .mockups/<topic>/<chosen>.html docs/design/YYYY-MM-DD/assets/
+git add docs/design/YYYY-MM-DD/assets/<chosen>.html
+```
+
+**Move the file you already built. Do not rebuild it.** The committed asset must be the exact thing the user looked at and picked — same bytes. Regenerating it from your description of it, or "cleaning it up" on the way in, means the implementer builds from a copy of a memory instead of from the approved design. `.mockups/` is git-ignored, so this is a plain `mv` plus `git add`, not `git mv`.
+
+Link it from Visuals with one line on why that take won. Leave the rejected takes in scratch.
 
 ## What this document is
 

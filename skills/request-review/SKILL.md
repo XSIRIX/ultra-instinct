@@ -70,6 +70,10 @@ invent findings to seem thorough. End with an overall assessment.
 
 ## Act on the findings
 
+**Keep going. Don't hand the findings back and wait.** You are mid-flow — the branch is yours, the context is warm, the suite is set up. Stopping to ask "want me to fix these?" makes the user the router between two halves of one job, and by the time they answer you've lost the context that made fixing cheap. Fix, then report what you fixed.
+
+The only findings that go to the user as a question are MINOR ones, and they go *after* the real fixes are done and green.
+
 Read all of them before fixing anything. Then:
 
 - **Critical and Important** — fix in **one pass**, all together. Not one subagent per finding: each fresh fixer rebuilds the same context and re-runs the same suite, which is how a final review ends up costing more than the implementation did.
