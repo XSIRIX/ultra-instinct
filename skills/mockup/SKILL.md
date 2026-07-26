@@ -9,19 +9,22 @@ Some questions are cheaper to answer with a picture. "Which of these three?" get
 
 **Done when** the user has picked a direction, or told you which parts of which takes they want combined.
 
-## Build in the project, don't commit them
+## Build outside the repo, move in when chosen
 
-Mockups belong in the project — you want to view them, and design skills need the project's real assets, tokens, and components. But you build three and throw two away, and the brainstorm they came from may not end in a build at all.
+You build three takes and throw two away, and the brainstorm they came from may not end in a build at all. None of that belongs in the user's checkout.
 
-So: **build them in the project, uncommitted, and don't trigger isolation.**
+So: **build them in a temp directory, and don't trigger isolation.**
 
 ```bash
-git check-ignore -q .mockups || { echo ".mockups/" >> .gitignore; }
-mkdir -p .mockups/<topic>
+MOCKUPS="${CLAUDE_SCRATCHPAD:-${TMPDIR:-/tmp}}/mockups/<topic>"
+mkdir -p "$MOCKUPS"
 ```
 
-- **No branch, no worktree, no commit.** `isolate-work` fires on the first *committed* artifact. A mockup you're about to discard isn't one, and branching for a conversation that might end in "interesting, never mind" is backwards.
-- **`.mockups/` is git-ignored scratch.** Adding the ignore line doesn't need a commit of its own — it rides along whenever the branch is created.
+Use the harness's own scratchpad directory if it gives you one; otherwise the temp path above. Either way it's outside the repo.
+
+- **Say the path out loud once.** Print the absolute directory when you first write to it. Later skills — and the user — need to find the chosen file, and a temp path isn't guessable.
+- **No branch, no worktree, no commit, no `.gitignore` line.** `isolate-work` fires on the first *committed* artifact. A mockup you're about to discard isn't one, and branching for a conversation that might end in "interesting, never mind" is backwards. Nothing lands in the repo until a take is picked.
+- **Self-contained files.** Living outside the project means relative paths to project CSS, fonts, or images won't resolve. Inline the styles, or reference project assets by absolute path. Still pull the project's *real* colors, spacing, and components — read them out of the codebase and bake them in.
 - **Show, don't file.** The deliverable is the user seeing them and picking. Render them however this harness renders things best; the files are just where they live.
 
 If the user explicitly asks to keep one outside this flow ("save that, I'm sending it to someone"), ask where it should go.
@@ -69,13 +72,13 @@ Show them together so they can be compared, say which you'd pick and why, and ma
 
 ## Once one is chosen
 
-Note the winning path and one line on why it won. Then it stops being scratch:
+Note the winning **absolute path** and one line on why it won. Then it stops being scratch:
 
-- `write-design-spec` moves the file into `docs/design/YYYY-MM-DD/assets/` and links it from the Visuals section
+- `write-design-spec` copies the file into `docs/design/YYYY-MM-DD/assets/` and links it from the Visuals section
 - `write-plan` points the frontend tasks at it, so whoever builds the UI is looking at the thing they're building
 
-What moves is **this file, unchanged** — not a rebuilt version of it. The value of a committed mockup is that it's the artifact the user actually approved.
+What lands in the repo is **this file, unchanged** — not a rebuilt version of it. The value of a committed mockup is that it's the artifact the user actually approved.
 
-Don't move it yourself here — there's no branch yet. Rejected takes stay in `.mockups/`.
+Don't move it yourself here — there's no branch yet. Rejected takes stay in temp.
 
-If the brainstorm ends without a build, the scratch files were the right cost. Nothing to clean up, nothing in git.
+If the brainstorm ends without a build, the scratch files were the right cost. Nothing to clean up, nothing in the repo at all.

@@ -41,7 +41,7 @@ Apply YAGNI hard. Every feature in the design should trace to something the user
 
 **If the work has a visual surface** — a screen, a layout, a flow, a component — a picture settles arguments that paragraphs won't. Use `mockup` to offer the user real mockups of the competing takes. Offer it when a specific visual question comes up, not preemptively for anything UI-adjacent.
 
-Mockups built here are scratch — they live in `.mockups/` (git-ignored) and don't start a branch. Nothing has been committed to yet, and most get thrown away. Once one is chosen, `write-design-spec` moves it into `docs/` and references it.
+Mockups built here are scratch — they live in a temp directory outside the repo and don't start a branch. Nothing has been committed to yet, and most get thrown away. Once one is chosen, `write-design-spec` copies it into `docs/` and references it.
 
 ## Present the design
 

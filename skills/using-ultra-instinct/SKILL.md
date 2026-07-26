@@ -25,8 +25,8 @@ Nine skills covering idea → merged. No hooks, no session injection — each lo
 brainstorm ──┬─→ (just thinking, stop here)
     │        │
   mockup     └─→ write-design-spec ──→ write-plan ──→ execute-plan ──→ request-review ──→ finish-branch
- .mockups/          │                                      │
- (ignored)     isolate-work                               tdd
+  (temp)            │                                      │
+               isolate-work                               tdd
 ```
 
 ## Routing
@@ -48,7 +48,7 @@ Every skill needs its input to exist, but that input can come from anywhere — 
 
 ## Facts worth having when asked
 
-- **Artifacts:** `.mockups/` (git-ignored scratch; chosen ones move to `docs/design/<date>/assets/`), `docs/design/YYYY-MM-DD/<topic>.md`, `docs/plans/YYYY-MM-DD/<feature>.md`. Dated directories because flat ones stop being scannable.
+- **Artifacts:** mockups in a temp directory outside the repo (chosen ones get copied to `docs/design/<date>/assets/`), `docs/design/YYYY-MM-DD/<topic>.md`, `docs/plans/YYYY-MM-DD/<feature>.md`. Dated directories because flat ones stop being scannable.
 - **Isolation is late** — the branch or worktree starts at the first *committed* artifact (the spec), not at the conversation.
 - **Docs over memory** — anything touching a library or API is checked against current docs. Those links flow spec References → per-task references → read by `execute-plan` before it writes against that API.
 - **`brainstorm` may end with nothing.** Not every conversation is a project.

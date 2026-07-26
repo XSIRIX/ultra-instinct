@@ -17,15 +17,19 @@ This file is the work's first committed artifact. Before creating it, use `isola
 
 Design doc, plan, and implementation all live on the same branch, so the branch tells the whole story.
 
-**Bring the visuals in now.** Mockups from brainstorming were built in the project but left uncommitted, so exploring three takes wouldn't force a branch before anyone committed to building. Now that the branch exists, the chosen one gets committed:
+**Bring the visuals in now.** Mockups from brainstorming were built in a temp directory outside the repo, so exploring three takes wouldn't put anything in the user's checkout before anyone committed to building. Now that the branch exists, the chosen one gets committed:
 
 ```bash
 mkdir -p docs/design/YYYY-MM-DD/assets
-mv .mockups/<topic>/<chosen>.html docs/design/YYYY-MM-DD/assets/
+cp "<mockup-dir>/<chosen>.html" docs/design/YYYY-MM-DD/assets/
 git add docs/design/YYYY-MM-DD/assets/<chosen>.html
 ```
 
-**Move the file you already built. Do not rebuild it.** The committed asset must be the exact thing the user looked at and picked — same bytes. Regenerating it from your description of it, or "cleaning it up" on the way in, means the implementer builds from a copy of a memory instead of from the approved design. `.mockups/` is git-ignored, so this is a plain `mv` plus `git add`, not `git mv`.
+`<mockup-dir>` is the absolute temp path `mockup` printed when it built them. If you don't have it, ask rather than guessing — a temp path isn't reconstructible.
+
+**Copy the file you already built. Do not rebuild it.** The committed asset must be the exact thing the user looked at and picked — same bytes. Regenerating it from your description of it, or "cleaning it up" on the way in, means the implementer builds from a copy of a memory instead of from the approved design.
+
+If the mockup referenced project assets by absolute path, fix those to repo-relative paths *after* committing the original, as a separate visible change — so the diff shows exactly what moved away from what was approved.
 
 Link it from Visuals with one line on why that take won. Leave the rejected takes in scratch.
 

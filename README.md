@@ -30,8 +30,8 @@ Works with Claude Code, Codex, Cursor, OpenCode, Gemini CLI, and ~70 other agent
 brainstorm ──┬─→ (just thinking, stop here)
     │        │
   mockup     └─→ write-design-spec ──→ write-plan ──→ execute-plan ──→ request-review ──→ finish-branch
- .mockups/          │                                      │
- (ignored)     isolate-work                               tdd
+  (temp)            │                                      │
+               isolate-work                               tdd
 ```
 
 | Skill | Fires when |
@@ -63,7 +63,7 @@ Nothing forces you through all nine steps. `tdd` and `mockup` are useful alone. 
 
 **Isolation is late.** The worktree happens when the first *committed* artifact gets written — the spec — not before the conversation starts.
 
-**Mockups are scratch until they're chosen.** Built in the project under git-ignored `.mockups/`, so exploring three visual takes doesn't force a branch for work nobody has committed to yet — and never lands in `docs/`. Once one is picked, it moves into `docs/design/<date>/assets/`, gets linked from the design spec's Visuals, and gets referenced by the frontend tasks in the plan. Rejected takes never touch git.
+**Mockups are scratch until they're chosen.** Built in a temp directory outside the repo, so exploring three visual takes doesn't force a branch — or put a single file in your checkout — for work nobody has committed to yet. Once one is picked, it's copied into `docs/design/<date>/assets/`, linked from the design spec's Visuals, and referenced by the frontend tasks in the plan. Rejected takes never touch the repo.
 
 **Docs are grouped by day.** `docs/design/YYYY-MM-DD/<topic>.md` and `docs/plans/YYYY-MM-DD/<feature>.md`. A flat plans directory hits fifty files fast and stops being scannable.
 
