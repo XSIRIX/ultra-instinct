@@ -21,7 +21,7 @@ test("the skills directory keeps the Skills CLI layout", () => {
   const result = validateSkillLayout(root);
 
   assert.deepEqual(result.errors, []);
-  assert.equal(result.names.length, 10);
+  assert.equal(result.names.length, 13);
 });
 
 test("skill validation rejects folder and frontmatter mismatches", async () => {

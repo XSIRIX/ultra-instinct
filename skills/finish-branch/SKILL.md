@@ -11,7 +11,7 @@ Green suite, then let the user decide how it lands.
 
 ## Verify
 
-Run the full suite on the tree you're about to integrate. A green run from earlier in the session only proves the tree it ran on. If anything fails, report it and stop — no menu until it's green.
+Use `verification-before-completion`. Run the full suite on the tree you're about to integrate. A green run from earlier in the session only proves the tree it ran on. If anything fails, report it and stop — no menu until it's green.
 
 ## Know where you are
 

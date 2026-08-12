@@ -26,6 +26,8 @@ Stop only for a blocker you genuinely can't resolve, an ambiguity where every re
 - The full suite is green
 - It's committed, with a message saying what changed and why
 
+Use `verification-before-completion` for the final claim. Fresh output from this tree is the evidence; an earlier green run is not.
+
 How you get there is yours. Nothing leaves a task red — a failing suite at the end of Task 3 is Task 3's problem, not Task 8's.
 
 ## Don't code from memory

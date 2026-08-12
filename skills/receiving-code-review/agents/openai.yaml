@@ -1,0 +1,4 @@
+interface:
+  display_name: "Receive Code Review"
+  short_description: "Check review feedback before changing code"
+  default_prompt: "Evaluate this code review feedback and apply only verified changes."

@@ -1,57 +1,31 @@
 ---
 name: using-ultra-instinct
-description: Use when the user asks about ultra-instinct itself — how it works, what skills exist, which to use, where to start — or says "use ultra instinct". A brief on the suite and how to route within it. Not a workflow step; produces no artifact.
+description: Use when the user asks about ultra-instinct itself, asks which workflow fits, or says "use ultra instinct". Routes work to the smallest matching skill. Not a workflow step and produces no artifact.
 ---
 
+<!-- ultra-instinct:bootstrap:v2 -->
 # Using Ultra Instinct
 
-If you were dispatched as a subagent to execute a specific task, ignore this — you were given your scope already.
+Select the smallest matching skill before acting, including before exploration or clarification. Say which skill you are using, then follow it. Drop it if evidence shows it does not fit.
 
-## The rule
+User and repository instructions take priority. Never manufacture process the user did not ask for. If directly assigned a narrow subtask, do that task.
 
-Pick the skill before you act, not after. That includes before asking clarifying questions and before exploring the codebase — the skills say *how* to do both, so reading one first changes what you do. If it turns out wrong once you're in it, drop it; checking costs seconds, not checking costs a whole approach done the default way.
+## Route by the current need
 
-Say which one you're using in a line — "using `write-plan` to turn the spec into tasks" — then follow it. Don't recite the chain; most work touches two or three of these.
+- Unsettled goal, behavior, or approach: `brainstorm`.
+- Visual layout, screen, or flow decision: `mockup`.
+- Agreed design that needs a durable spec: `write-design-spec`.
+- Approved spec or clear requirements that need build tasks: `write-plan`.
+- First committed artifact or implementation needs isolation: `isolate-work`.
+- Approved plan needs full implementation: `execute-plan`.
+- Feature, fix, or behavior change: `tdd`.
+- Unexplained failure: `systematic-debugging`, then `tdd` after the cause is confirmed.
+- Work appears done: `verification-before-completion`.
+- Request a whole-branch review: `request-review`.
+- Review feedback arrived: `receiving-code-review`.
+- Reviewed, green branch needs to land: `finish-branch`.
+- Questions about this suite or routing: `using-ultra-instinct`.
 
-Process before implementation. `brainstorm` sets the approach, the building skills carry it out. "Let's build X" is `brainstorm` first, not `execute-plan` first.
+Do not restart at `brainstorm` when a valid spec or plan already exists. Inputs may come from another session or document. Ask once only when the entry point materially changes the work.
 
-User instructions win. CLAUDE.md, AGENTS.md, and anything the user says directly override these skills; these skills override your defaults.
-
-## The suite
-
-Nine skills covering idea → merged. No hooks, no session injection — each loads when it applies.
-
-```
-brainstorm ──┬─→ (just thinking, stop here)
-    │        │
-  mockup     └─→ write-design-spec ──→ write-plan ──→ execute-plan ──→ request-review ──→ finish-branch
-  (temp)            │                                      │
-               isolate-work                               tdd
-```
-
-## Routing
-
-Match where the user actually is, not the top of the chain:
-
-| They have | Use |
-|---|---|
-| A rough idea, nothing written | `brainstorm` |
-| A visual question — layout, screen, flow | `mockup` |
-| An agreed design, in conversation only | `write-design-spec` |
-| A spec, or clear written requirements | `write-plan` |
-| A plan on disk | `execute-plan` |
-| A small bugfix or behavior change | `tdd` alone |
-| A built branch | `request-review`, then `finish-branch` |
-| A first artifact about to be written | `isolate-work` (no-ops if already isolated) |
-
-Every skill needs its input to exist, but that input can come from anywhere — the user's head, a doc from last week, another session. Don't rerun an earlier stage to manufacture something that already exists in another form. If the entry point is genuinely ambiguous, ask once.
-
-## Facts worth having when asked
-
-- **Artifacts:** mockups in a temp directory outside the repo (chosen ones get copied to `docs/design/<date>/assets/`), `docs/design/YYYY-MM-DD/<topic>.md`, `docs/plans/YYYY-MM-DD/<feature>.md`. Dated directories because flat ones stop being scannable.
-- **Isolation is late** — the branch or worktree starts at the first *committed* artifact (the spec), not at the conversation.
-- **Docs over memory** — anything touching a library or API is checked against current docs. Those links flow spec References → per-task references → read by `execute-plan` before it writes against that API.
-- **`brainstorm` may end with nothing.** Not every conversation is a project.
-- **`execute-plan` runs to completion** — no per-task check-ins unless the user asks before it starts.
-- **One review pass** at the end, over the whole branch. **One commit per task**, not per step.
-- Install: `npx skills add xsirix/ultra-instinct` (`-g` global, `--skill <name>` for one).
+For implementation, use fresh library docs, tests before production changes, and fresh evidence before completion. Ultra Instinct guidance never outranks the user's direct request.
