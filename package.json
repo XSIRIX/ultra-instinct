@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test tests/**/*.test.mjs",
+    "test": "node validation/test.mjs",
     "validate": "node validation/cli.mjs",
     "validate:portable": "node validation/cli.mjs portable",
     "check": "npm run validate && npm test"
