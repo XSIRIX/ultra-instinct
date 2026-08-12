@@ -1,76 +1,100 @@
-# ultra-instinct
+# Ultra Instinct
 
-A lightweight agent skill set for shipping features: **brainstorm → spec → plan → build → review**.
+Ultra Instinct helps coding agents choose the right workflow before they act. It keeps one set of thirteen skills and adds a small, shared runtime for Claude Code, Codex, and OpenCode.
 
-Ten skills, no hooks, no session-start injection, no framework. The model picks them up when they apply, the same way it picks up any other skill.
+## Choose an install
 
-## Install
+### Skills-only
+
+This is the lightest option. It works with Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and other clients supported by the [Skills CLI](https://github.com/vercel-labs/skills). There are no hooks or runtime state.
 
 ```bash
 npx skills add xsirix/ultra-instinct
 ```
 
-Global (available in every project):
+Install globally with `-g`, or install one skill with `--skill tdd`.
+
+### Native runtime
+
+This adds session routing, compaction recovery, mutation tracking, and verification guidance. The default profile is `guided`.
+
+Claude Code:
 
 ```bash
-npx skills add xsirix/ultra-instinct -g
+claude plugin marketplace add XSIRIX/ultra-instinct
+claude plugin install ultra-instinct@ultra-instinct
 ```
 
-Just one skill:
+Codex:
 
 ```bash
-npx skills add xsirix/ultra-instinct --skill tdd
+codex plugin marketplace add XSIRIX/ultra-instinct
+codex plugin add ultra-instinct@ultra-instinct
 ```
 
-Works with Claude Code, Codex, Cursor, OpenCode, Gemini CLI, and ~70 other agents via the [skills CLI](https://github.com/vercel-labs/skills).
+OpenCode can load the source checkout directly. Clone it under your project, then link its entry point:
 
-## The flow
-
-```
-brainstorm ──┬─→ (just thinking, stop here)
-    │        │
-  mockup     └─→ write-design-spec ──→ write-plan ──→ execute-plan ──→ request-review ──→ finish-branch
-  (temp)            │                                      │
-               isolate-work                               tdd
+```bash
+git clone https://github.com/XSIRIX/ultra-instinct.git vendor/ultra-instinct
+mkdir -p .opencode/plugins
+ln -s "$PWD/vendor/ultra-instinct/.opencode/index.mjs" .opencode/plugins/ultra-instinct.mjs
 ```
 
-| Skill | Fires when |
+See [the runtime guide](docs/runtime.md) for profiles, trust, privacy, tested versions, global OpenCode setup, and uninstall commands.
+
+## Profiles
+
+Set `ULTRA_INSTINCT_PROFILE` before starting your client:
+
+```bash
+ULTRA_INSTINCT_PROFILE=strict claude
+```
+
+| Profile | What it does |
 |---|---|
-| `brainstorm` | An idea or problem needs thinking through. May end without an artifact. |
-| `mockup` | A design question is easier to settle by showing than describing. |
-| `write-design-spec` | The design is settled and it's going to be built. First committed artifact — triggers isolation. |
-| `write-plan` | A spec exists and needs to become ordered, executable tasks. |
-| `isolate-work` | Before the first artifact. Detects existing isolation and no-ops. |
-| `execute-plan` | A plan exists. Runs to completion, TDD per task, one commit per task. |
-| `tdd` | Any feature, bugfix, or behavior change. |
-| `request-review` | Implementation is done. One reviewer subagent over the whole branch. |
-| `finish-branch` | Reviewed and green. Merge, PR, or keep. |
-| `using-ultra-instinct` | Not a step — a brief on the suite, loaded when asked about it or unsure which skill fits. |
+| `lite` | Skills only. No bootstrap, state, warnings, or completion gate. |
+| `guided` | Routes work, restores context, and warns about unverified changes. Never blocks. |
+| `strict` | Adds one bounded verification continuation per mutation cycle. Never loops. |
 
-Nothing forces you through all nine steps. `tdd` and `mockup` are useful alone. `brainstorm` often ends at "now I understand the problem." The chain exists for work big enough to need it.
+Invalid or missing values fall back to `guided`; invalid values emit a short warning.
 
-## Design choices
+## Skills
 
-**Right altitude, not minimum rules.** Instructions state the outcome and how it's verified, then leave the method open — *unless* the method is load-bearing and non-obvious, in which case it's stated exactly. Both failure modes are real: brittle step-by-step procedure, and vague guidance that assumes shared context the model doesn't have. ([Anthropic on context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents))
+| Need | Skill |
+|---|---|
+| Pick an approach | `brainstorm` |
+| Compare visual options | `mockup` |
+| Record an agreed design | `write-design-spec` |
+| Turn a spec into tasks | `write-plan` |
+| Isolate committed work | `isolate-work` |
+| Execute an approved plan | `execute-plan` |
+| Change behavior safely | `tdd` |
+| Diagnose an unexplained failure | `systematic-debugging` |
+| Prove completion | `verification-before-completion` |
+| Request or receive review | `request-review`, `receiving-code-review` |
+| Finish a reviewed branch | `finish-branch` |
+| Understand the suite | `using-ultra-instinct` |
 
-**No hook.** Nothing is injected into every session. Skills load when the model decides they're relevant and cost nothing when they aren't.
+Claude Code and OpenCode also expose workflow commands plus reviewer and debugger agents. Codex provides the equivalent behavior through skills and runtime guidance.
 
-**No compliance tables.** No "Common Rationalizations", no "Red Flags — STOP", no `<EXTREMELY-IMPORTANT>` wrappers. If a rule needs a table of excuses to enforce it, the rule isn't explaining itself well enough.
+## Safety
 
-**Grounded in current docs, not memory.** `brainstorm` checks real docs before recommending anything. What it found lands in the spec's References, gets carried into the plan *per task*, and is what `execute-plan` reads before writing against an API — so the links sit where the work happens instead of in a bibliography nobody scrolls back to.
+- User and repository instructions always win.
+- Hooks do not use the network, install packages, edit project files, call a model, or run checks.
+- State contains only mutation and verification facts. It never stores prompts, transcripts, source, filenames, tool arguments, output, environment values, or credentials.
+- Runtime failures allow the client action and emit a short warning.
+- There are zero production dependencies and no postinstall script.
 
-**Brainstorming can end in nothing.** Not every conversation is a project.
+## Development
 
-**Isolation is late.** The worktree happens when the first *committed* artifact gets written — the spec — not before the conversation starts.
+```bash
+npm install
+npm run check
+npm run eval -- --dry-run --client all --profile guided --repeat 5 --label guided
+```
 
-**Mockups are scratch until they're chosen.** Built in a temp directory outside the repo, so exploring three visual takes doesn't force a branch — or put a single file in your checkout — for work nobody has committed to yet. Once one is picked, it's copied into `docs/design/<date>/assets/`, linked from the design spec's Visuals, and referenced by the frontend tasks in the plan. Rejected takes never touch the repo.
-
-**Docs are grouped by day.** `docs/design/YYYY-MM-DD/<topic>.md` and `docs/plans/YYYY-MM-DD/<feature>.md`. A flat plans directory hits fifty files fast and stops being scannable.
-
-**One review.** At the end, over the whole branch, one fix pass. Per-task review gates cost more than they catch when the plan is good and every task ships green tests.
-
-**One commit per task.** Not per step.
+Deterministic checks are free and local. Live evaluations call paid models and require separate operator consent. See [evals/README.md](evals/README.md).
 
 ## License
 
-MIT
+MIT. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for retained provenance.

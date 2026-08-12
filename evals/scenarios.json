@@ -1,0 +1,92 @@
+[
+  {
+    "id": "feature-brainstorm",
+    "prompt": "Think through two simple ways to add a greet command. Compare tradeoffs and stop before editing files.",
+    "fixture": "node-package",
+    "expectedSkill": "brainstorm",
+    "forbiddenSkills": ["execute-plan", "tdd"],
+    "mutationExpected": false,
+    "verificationExpected": false,
+    "profiles": ["lite", "guided", "strict"]
+  },
+  {
+    "id": "small-change-tdd",
+    "prompt": "Add a greet(name) function that returns 'Hello, <name>!'. Use the project's test command and finish the change.",
+    "fixture": "node-package",
+    "expectedSkill": "tdd",
+    "forbiddenSkills": ["brainstorm", "write-design-spec"],
+    "mutationExpected": true,
+    "verificationExpected": true,
+    "profiles": ["lite", "guided", "strict"]
+  },
+  {
+    "id": "unexplained-failure",
+    "prompt": "The test is failing for an unknown reason. Diagnose the cause first, fix it, and prove the fix with the project test command.",
+    "fixture": "failing-test",
+    "expectedSkill": "systematic-debugging",
+    "forbiddenSkills": ["brainstorm", "write-design-spec"],
+    "mutationExpected": true,
+    "verificationExpected": true,
+    "profiles": ["lite", "guided", "strict"]
+  },
+  {
+    "id": "typo-only",
+    "prompt": "Fix only the misspelling 'recieve' in README.md. Do not broaden the change.",
+    "fixture": "typo",
+    "expectedSkill": null,
+    "forbiddenSkills": ["brainstorm", "write-design-spec", "write-plan"],
+    "mutationExpected": true,
+    "verificationExpected": false,
+    "profiles": ["lite", "guided", "strict"]
+  },
+  {
+    "id": "read-only",
+    "prompt": "Read the project and tell me which file exports add(). Do not edit anything.",
+    "fixture": "node-package",
+    "expectedSkill": null,
+    "forbiddenSkills": ["tdd", "execute-plan", "write-plan"],
+    "mutationExpected": false,
+    "verificationExpected": false,
+    "profiles": ["lite", "guided", "strict"]
+  },
+  {
+    "id": "compaction-state",
+    "prompt": "Add a subtract(a, b) function with a test. If context is compacted, continue from restored workflow state and finish.",
+    "fixture": "node-package",
+    "expectedSkill": "tdd",
+    "forbiddenSkills": ["brainstorm"],
+    "mutationExpected": true,
+    "verificationExpected": true,
+    "profiles": ["guided", "strict"]
+  },
+  {
+    "id": "guided-warning",
+    "prompt": "Add multiply(a, b), but stop immediately after the implementation without running checks.",
+    "fixture": "node-package",
+    "expectedSkill": "tdd",
+    "forbiddenSkills": ["brainstorm"],
+    "mutationExpected": true,
+    "verificationExpected": false,
+    "profiles": ["guided"]
+  },
+  {
+    "id": "strict-verification",
+    "prompt": "Add divide(a, b), intentionally pause before verification, then follow any runtime continuation and finish with fresh tests.",
+    "fixture": "node-package",
+    "expectedSkill": "tdd",
+    "forbiddenSkills": ["brainstorm"],
+    "mutationExpected": true,
+    "verificationExpected": true,
+    "profiles": ["strict"]
+  },
+  {
+    "id": "strict-bounded",
+    "prompt": "Add modulo(a, b), stop after the edit, and do not run verification. The runtime must not continue more than once.",
+    "fixture": "node-package",
+    "expectedSkill": "tdd",
+    "forbiddenSkills": ["brainstorm"],
+    "mutationExpected": true,
+    "verificationExpected": false,
+    "profiles": ["strict"]
+  }
+]

@@ -17,7 +17,10 @@
     "validate:claude": "node validation/cli.mjs claude",
     "validate:codex": "node validation/cli.mjs codex",
     "validate:opencode": "node validation/cli.mjs opencode",
-    "check": "npm run validate && npm test"
+    "check": "npm run validate && npm test",
+    "eval": "node evals/run.mjs",
+    "eval:compare": "node evals/compare.mjs",
+    "eval:report": "node evals/report.mjs"
   },
   "dependencies": {},
   "devDependencies": {
