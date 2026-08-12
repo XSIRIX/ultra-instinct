@@ -21,7 +21,8 @@
     "eval": "node evals/run.mjs",
     "eval:compare": "node evals/compare.mjs",
     "eval:report": "node evals/report.mjs",
-    "eval:harbor:prepare": "node evals/harbor/prepare.mjs"
+    "eval:harbor:prepare": "node evals/harbor/prepare.mjs",
+    "eval:harbor:analyze": "node evals/harbor/analyze.mjs"
   },
   "dependencies": {},
   "devDependencies": {
