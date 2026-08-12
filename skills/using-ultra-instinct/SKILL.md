@@ -23,6 +23,7 @@ One primary agent owns the task and its final result. Delegate only independent 
 - Feature, fix, or behavior change: `tdd`.
 - Unexplained failure: `systematic-debugging`, then `tdd` after the cause is confirmed.
 - Work appears done: `verification-before-completion`.
+- Freshly verified meaningful tracked work: `capture-artifact`.
 - Request a whole-branch review: `request-review`.
 - Review feedback arrived: `receiving-code-review`.
 - Reviewed, green branch needs to land: `finish-branch`.

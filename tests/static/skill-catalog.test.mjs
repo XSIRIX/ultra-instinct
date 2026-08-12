@@ -6,6 +6,7 @@ import { readSkillFrontmatter, validateSkillLayout } from "../../validation/skil
 
 const EXPECTED = [
   "brainstorm",
+  "capture-artifact",
   "execute-plan",
   "finish-branch",
   "isolate-work",
@@ -22,7 +23,7 @@ const EXPECTED = [
 
 const root = path.resolve(import.meta.dirname, "../..");
 
-test("the canonical catalog contains exactly thirteen skills", () => {
+test("the canonical catalog contains exactly fourteen skills", () => {
   const result = validateSkillLayout(root);
   assert.deepEqual(result.errors, []);
   assert.deepEqual(result.names.sort(), EXPECTED);
