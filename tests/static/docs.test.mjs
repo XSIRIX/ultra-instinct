@@ -33,4 +33,6 @@ test("current runtime design matches post-tool-only hooks and local-first artifa
   assert.doesNotMatch(design, /PreToolUse|tool\.execute\.before/);
   assert.match(design, /\.ultra-instinct/);
   assert.match(design, /dirty cycle/i);
+  assert.match(design, /exactly fourteen canonical skills/i);
+  assert.match(design, /capture-artifact/);
 });

@@ -37,4 +37,4 @@ Keep it concise and useful without the original conversation. Link to canonical 
 
 Exclude prompts, transcripts, private reasoning, secrets, raw tool output, a chronological diary, and an exhaustive file list. Draft evidence stays ignored under `.ultra-instinct/`; the cleaned artifact belongs under `docs/` and is tracked with the work.
 
-Run only after fresh verification and before `request-review`. Never invoke this skill from a hook, and never create extra artifacts for nested workflow steps.
+Run only after fresh verification. When the active workflow authorizes commits, commit the artifact with the work before `request-review`; otherwise keep it inside the review scope without inventing commit permission. Never invoke this skill from a hook, and never create extra artifacts for nested workflow steps.

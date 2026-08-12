@@ -20,3 +20,5 @@ Prove the claim you are about to make.
 A formatter does not prove compilation. A unit test does not prove a browser flow. A green CI run for another commit does not prove this tree.
 
 Report what ran and what passed. If a check cannot run, say why, what remains unproven, and the smallest next step. Never turn “not observed” into “works.”
+
+For a completed meaningful tracked workflow, hand the fresh evidence to `capture-artifact` before whole-branch review. Skip that handoff for trivial edits, abandoned work, and read-only answers.

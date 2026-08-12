@@ -9,7 +9,7 @@ Ultra Instinct has two modes:
 
 ### Skills-only
 
-Install all thirteen skills in the current project:
+Install all fourteen skills in the current project:
 
 ```bash
 npx skills add xsirix/ultra-instinct

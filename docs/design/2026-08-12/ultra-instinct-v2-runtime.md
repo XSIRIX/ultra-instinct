@@ -26,7 +26,7 @@ Agent Plugins 1.0 is the portable packaging floor. It standardizes a root `plugi
 10. Hooks MUST NOT make network requests, install dependencies, modify project source files, run tests automatically, spawn agents, or make subjective product decisions. Writing fact-only state beneath ignored `.ultra-instinct/` is allowed.
 11. A runtime or state error MUST fail open in every profile, preserve the client action, and emit one concise warning. Methodology enforcement MUST never make the client unusable.
 12. User instructions MUST win. If the user explicitly requests a different workflow, Ultra Instinct MAY warn about an objective risk but MUST NOT silently override the request.
-13. The initial v2 catalog MUST contain exactly thirteen canonical skills: the existing ten plus `systematic-debugging`, `verification-before-completion`, and `receiving-code-review`.
+13. The initial v2 catalog MUST contain exactly fourteen canonical skills: the existing ten plus `systematic-debugging`, `verification-before-completion`, `receiving-code-review`, and `capture-artifact`.
 14. Claude Code and OpenCode MUST expose explicit workflow commands and reviewer/debugger agents through their native plugin surfaces. Codex MUST expose equivalent workflows through skills and runtime guidance until portable plugin commands and agents are supported. Core acceptance MUST NOT depend on commands or agents.
 15. The existing `npx skills add xsirix/ultra-instinct` installation MUST continue to work as the `lite` experience.
 16. Any copied or modified Superpowers or ECC code MUST retain its MIT attribution. Claude Code implementation code MUST NOT be copied; only its documented plugin interfaces and public examples may shape compatibility behavior.
@@ -136,6 +136,7 @@ The body MUST remain a compact router rather than embedding the full skill catal
 - Behavior change → `tdd`
 - Unexplained failure → `systematic-debugging`
 - Completed change → `verification-before-completion`
+- Freshly verified meaningful tracked work → `capture-artifact`
 - Review requested or received → `request-review` or `receiving-code-review`
 - Reviewed branch → `finish-branch`
 
@@ -179,7 +180,7 @@ One primary agent owns each task and its final result. Delegation is reserved fo
 
 ### Local artifacts
 
-Draft design specs, plans, mockups, runtime facts, evaluation traces, and Harbor jobs live under ignored `.ultra-instinct/`. Creating local artifacts does not require branch isolation. Only an explicit publish request copies a finalized spec or plan into tracked `docs/design/` or `docs/plans/`; source edits and published artifacts use the normal isolation workflow.
+Draft design specs, plans, mockups, runtime facts, evaluation traces, and Harbor jobs live under ignored `.ultra-instinct/`. Creating local artifacts does not require branch isolation. A completed meaningful workflow produces one cleaned, tracked artifact under the repository's existing `docs/` convention after verification and before review; an existing topic is updated instead of duplicated. Raw history stays ignored, finalized specs and plans are published only when explicitly requested, and hooks never write documentation.
 
 ### Packaging and installation
 
@@ -244,7 +245,7 @@ A release report records client versions, operating system, model, profile, scen
 - Network access during hook execution: none.
 - Default profile: `guided`.
 - Release candidate version: `2.0.0-rc.1`.
-- Skill count in the initial v2 release: thirteen.
+- Skill count in the initial v2 release: fourteen.
 - Repository license: MIT, with third-party attribution retained when code is reused.
 
 ## References

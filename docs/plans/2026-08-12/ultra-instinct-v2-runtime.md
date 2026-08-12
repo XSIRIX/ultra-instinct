@@ -21,7 +21,7 @@
 - Hook runtime: 50 ms p95 in fixture tests with a hard client timeout of two seconds.
 - Hook network access: none.
 - Default profile: `guided`; supported overrides are `lite` and `strict` through `ULTRA_INSTINCT_PROFILE`.
-- Initial v2 skill count: exactly thirteen.
+- Initial v2 skill count: exactly fourteen.
 - Hooks MUST fail open on runtime, state, and adapter errors.
 - Hooks MUST NOT store prompts, transcripts, tool arguments, tool output, source text, filenames, environment values, or credentials.
 - Hooks MUST NOT modify project source files, install dependencies, run project checks automatically, make model calls, or spawn agents. Fact-only state under ignored `.ultra-instinct/` is allowed.
@@ -113,9 +113,9 @@ npm ls --omit=dev
 
 **Commit:** `build: add portable plugin foundation`
 
-### Task 2: Thirteen-skill catalog and compact canonical router
+### Task 2: Fourteen-skill catalog and compact canonical router
 
-**Delivers:** Ultra Instinct has the approved thirteen canonical skills, and `using-ultra-instinct` is small enough to serve as the injected bootstrap.
+**Delivers:** Ultra Instinct has the approved fourteen canonical skills, and `using-ultra-instinct` is small enough to serve as the injected bootstrap.
 
 **Requirement coverage:** 7, 12, 13, 16; bootstrap and skill-count constraints.
 
@@ -123,6 +123,7 @@ npm ls --omit=dev
 - Create: `skills/systematic-debugging/SKILL.md`
 - Create: `skills/verification-before-completion/SKILL.md`
 - Create: `skills/receiving-code-review/SKILL.md`
+- Create: `skills/capture-artifact/SKILL.md`
 - Create: `tests/static/skill-catalog.test.mjs`
 - Create: `tests/static/bootstrap-budget.test.mjs`
 - Modify: `skills/using-ultra-instinct/SKILL.md`
@@ -133,9 +134,9 @@ npm ls --omit=dev
 
 **Interfaces:**
 - Consumes: `readSkillFrontmatter()` and `validateSkillLayout()` from Task 1.
-- Produces: exactly thirteen immediate `skills/*/SKILL.md` entries.
+- Produces: exactly fourteen immediate `skills/*/SKILL.md` entries.
 - Produces bootstrap marker: `<!-- ultra-instinct:bootstrap:v2 -->` exactly once in the `using-ultra-instinct` body.
-- Produces routing names consumed by `runtime/bootstrap.mjs`: `systematic-debugging`, `verification-before-completion`, and `receiving-code-review` alongside the existing ten names.
+- Produces routing names consumed by `runtime/bootstrap.mjs`: `systematic-debugging`, `verification-before-completion`, `receiving-code-review`, and `capture-artifact` alongside the existing ten names.
 
 **References:**
 - Existing Ultra skill voice and structure in `skills/tdd/SKILL.md`, `skills/request-review/SKILL.md`, and `skills/using-ultra-instinct/SKILL.md`.
@@ -143,7 +144,7 @@ npm ls --omit=dev
 - [Superpowers verification before completion](https://github.com/obra/superpowers/blob/44c9b2d6e889982ac18c27d05a19fefe335194e1/skills/verification-before-completion/SKILL.md)
 - [Superpowers receiving code review](https://github.com/obra/superpowers/blob/44c9b2d6e889982ac18c27d05a19fefe335194e1/skills/receiving-code-review/SKILL.md)
 
-**Approach:** Write the exact-catalog and byte-budget tests first. Adapt the three missing workflows to Ultra's concise, outcome-led style rather than copying Superpowers' imperative wrappers or rationalization tables. `systematic-debugging` ends with a testable root-cause hypothesis and hands behavior changes to `tdd`; `verification-before-completion` requires fresh commands and honest evidence; `receiving-code-review` verifies feedback before changing code. Rewrite the router body to include user-instruction precedence, all routes, and the stable marker within 2,400 bytes. Update execution, review, and finish skills so verification and received-review handling compose without duplicating the new skill bodies. Record the three MIT-licensed Superpowers source skills in `THIRD_PARTY_NOTICES.md` whether the final wording is adapted or independently rewritten.
+**Approach:** Write the exact-catalog and byte-budget tests first. Adapt the three missing Superpowers workflows to Ultra's concise, outcome-led style rather than copying imperative wrappers or rationalization tables. Add `capture-artifact` as Ultra's lightweight finalization step: one clean docs entry per verified meaningful work item, never per nested skill or from a hook. `systematic-debugging` ends with a testable root-cause hypothesis and hands behavior changes to `tdd`; `verification-before-completion` requires fresh commands and honest evidence; `receiving-code-review` verifies feedback before changing code. Rewrite the router body to include user-instruction precedence, all routes, and the stable marker within 2,400 bytes. Update execution, review, and finish skills so verification, capture, and received-review handling compose without duplicating skill bodies. Record the three MIT-licensed Superpowers source skills in `THIRD_PARTY_NOTICES.md` whether the final wording is adapted or independently rewritten.
 
 **Verify:**
 
@@ -152,7 +153,7 @@ npm test -- tests/static/skill-layout.test.mjs tests/static/skill-catalog.test.m
 npm run validate:portable
 ```
 
-**Done when:** Static validation sees exactly thirteen unique skills; every new description has positive and negative trigger boundaries; the stripped router is at most 2,400 bytes; all thirteen names are routable; user instructions remain higher priority; and no router text still claims there are nine skills or no session injection.
+**Done when:** Static validation sees exactly fourteen unique skills; every new description has positive and negative trigger boundaries; the stripped router is at most 2,400 bytes; all fourteen names are routable; user instructions remain higher priority; and no router text still claims there are nine skills or no session injection.
 
 **Commit:** `feat: complete the Ultra Instinct skill router`
 
@@ -430,7 +431,7 @@ npm run eval:report -- --runs baseline,guided,strict
 | No network, project mutation, model calls, or automatic checks in hooks | Tasks 3–6 | Runtime and package tests |
 | Fail-open behavior | Tasks 3–6 | Forced-error tests per layer |
 | User instruction precedence | Tasks 2–3 | Router and policy tests |
-| Exactly thirteen skills | Task 2 | Exact-catalog test |
+| Exactly fourteen skills | Task 2 | Exact-catalog test |
 | Commands and reviewer/debugger agents | Tasks 4 and 6 | Surface and adapter tests |
 | Skills CLI compatibility | Tasks 1, 2, and 7 | Layout tests and documented smoke command |
 | License provenance | Tasks 1–2 | Notice and package validation |

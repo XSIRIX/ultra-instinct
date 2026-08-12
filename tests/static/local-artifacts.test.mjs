@@ -10,14 +10,16 @@ async function text(file) {
 }
 
 test("generated artifacts default to one ignored local workspace", async () => {
-  const [gitignore, design, plan, mockup, isolation, evalGuide, harborGuide, ...evalClients] = await Promise.all([
+  const [gitignore, design, plan, mockup, brainstorm, isolation, evalGuide, harborGuide, durableArtifact, ...evalClients] = await Promise.all([
     text(".gitignore"),
     text("skills/write-design-spec/SKILL.md"),
     text("skills/write-plan/SKILL.md"),
     text("skills/mockup/SKILL.md"),
+    text("skills/brainstorm/SKILL.md"),
     text("skills/isolate-work/SKILL.md"),
     text("evals/README.md"),
     text("evals/harbor/README.md"),
+    text("docs/features/capture-artifact.md"),
     text("evals/clients/claude.mjs"),
     text("evals/clients/codex.mjs"),
     text("evals/clients/opencode.mjs"),
@@ -30,9 +32,12 @@ test("generated artifacts default to one ignored local workspace", async () => {
   assert.match(plan, /\.ultra-instinct\/plans\/YYYY-MM-DD\/<feature>\.md/);
   assert.match(plan, /explicitly asks to publish/i);
   assert.match(mockup, /\.ultra-instinct\/mockups\/<topic>/);
+  assert.match(brainstorm, /\.ultra-instinct\/mockups\/<topic>/);
+  assert.doesNotMatch(brainstorm, /temp directory outside the repo/i);
   assert.match(isolation, /ignored specs and plans do not require isolation/i);
   assert.match(evalGuide, /\.ultra-instinct\/evals\/<label>/);
   assert.match(harborGuide, /\.ultra-instinct\/harbor\/smoke-001/);
+  assert.match(durableArtifact, /tracked.+docs|docs.+tracked/is);
   for (const client of evalClients) {
     assert.match(client, /\.ultra-instinct["'], ["']runtime/);
     assert.doesNotMatch(client, /\.ultra-eval-state/);

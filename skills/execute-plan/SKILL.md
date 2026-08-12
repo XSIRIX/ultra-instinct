@@ -1,6 +1,6 @@
 ---
 name: execute-plan
-description: Use when an implementation plan exists and it's time to build it — works through the tasks with TDD, checking current library docs rather than coding from memory, committing per task. Runs to completion without check-ins. Follows write-plan, precedes request-review.
+description: Use when an implementation plan exists and it's time to build it — works through the tasks with TDD, checking current library docs rather than coding from memory, committing per task. Runs to completion without check-ins. Follows write-plan, precedes capture-artifact and request-review.
 ---
 
 # Execute Plan
@@ -63,4 +63,4 @@ If you're about to write "should now", "I believe", or "Perfect!" before running
 
 ## When the plan is done
 
-All tasks complete, suite green, everything committed. Use `request-review`.
+All implementation tasks complete, suite green, and task commits present. Use `verification-before-completion`, then `capture-artifact` once for the complete work item, commit that artifact with the work, then use `request-review`.

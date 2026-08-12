@@ -41,7 +41,7 @@ Apply YAGNI hard. Every feature in the design should trace to something the user
 
 **If the work has a visual surface** — a screen, a layout, a flow, a component — a picture settles arguments that paragraphs won't. Use `mockup` to offer the user real mockups of the competing takes. Offer it when a specific visual question comes up, not preemptively for anything UI-adjacent.
 
-Mockups built here are scratch — they live in a temp directory outside the repo and don't start a branch. Nothing has been committed to yet, and most get thrown away. Once one is chosen, `write-design-spec` copies it into `docs/` and references it.
+Mockups built here are scratch — they live under ignored `.ultra-instinct/mockups/<topic>/` and don't start a branch. Nothing has been committed to yet, and most get thrown away. A chosen mockup may be referenced by `write-design-spec`; publish it only when the user explicitly asks.
 
 ## Present the design
 
@@ -55,6 +55,6 @@ Cover what's relevant: the pieces and their boundaries, how data moves, what hap
 
 ## Ending
 
-If the user wants it built, use `write-design-spec` — that's where the design becomes a committed artifact and the work moves onto its own branch.
+If the user wants it built, use `write-design-spec` — it saves the agreed design under ignored `.ultra-instinct/design/` and the implementation moves onto its own branch. Publish the spec only when the user explicitly asks.
 
 If it was just thinking, stop here. Ask which it is if it's unclear; don't assume the first.

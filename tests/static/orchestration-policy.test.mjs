@@ -18,3 +18,19 @@ test("skills keep one primary owner and bound delegation", async () => {
   assert.match(execution, /non-overlapping|read-only/i);
   assert.match(review, /explicit review/i);
 });
+
+test("completed plans verify, capture one durable artifact, then request review", async () => {
+  const [execution, verification] = await Promise.all([
+    readFile(path.join(root, "skills/execute-plan/SKILL.md"), "utf8"),
+    readFile(path.join(root, "skills/verification-before-completion/SKILL.md"), "utf8"),
+  ]);
+
+  const verifyIndex = execution.lastIndexOf("verification-before-completion");
+  const captureIndex = execution.lastIndexOf("capture-artifact");
+  const reviewIndex = execution.lastIndexOf("request-review");
+
+  assert.ok(verifyIndex >= 0);
+  assert.ok(captureIndex > verifyIndex);
+  assert.ok(reviewIndex > captureIndex);
+  assert.match(verification, /capture-artifact.+before.+review/is);
+});

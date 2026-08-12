@@ -47,5 +47,19 @@ test("capture-artifact records durable facts without becoming a log", async () =
 
   assert.match(body, /after fresh verification/i);
   assert.match(body, /before.+request-review/i);
+  assert.match(body, /commit.+before.+request-review/is);
   assert.match(body, /(?:never|do not).+hook/i);
+});
+
+test("the feature dogfoods one durable project documentation entry", async () => {
+  const artifact = await readFile(path.join(root, "docs/features/capture-artifact.md"), "utf8");
+
+  for (const heading of ["Summary", "What changed", "Decisions", "Verification", "Limitations", "Related"]) {
+    assert.match(artifact, new RegExp(`^## ${heading}$`, "m"));
+  }
+
+  assert.match(artifact, /one.+meaningful work item/i);
+  assert.match(artifact, /\.ultra-instinct/i);
+  assert.match(artifact, /request-review/i);
+  assert.doesNotMatch(artifact, /^## (?:Timeline|Chronology|Work log)$/im);
 });
