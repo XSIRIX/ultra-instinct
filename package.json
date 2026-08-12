@@ -10,6 +10,7 @@
     "test": "node validation/test.mjs",
     "validate": "node validation/cli.mjs",
     "validate:portable": "node validation/cli.mjs portable",
+    "validate:claude": "node validation/cli.mjs claude",
     "check": "npm run validate && npm test"
   },
   "dependencies": {},

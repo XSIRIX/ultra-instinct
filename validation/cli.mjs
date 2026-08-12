@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { validatePortablePlugin } from "./portable.mjs";
 import { validateSkillLayout } from "./skills.mjs";
+import { validateClaudePackage } from "./claude.mjs";
 
 const pluginRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -12,6 +13,7 @@ export async function runValidation(target = "all", root = pluginRoot) {
     errors.push(...(await validatePortablePlugin(root)).errors);
     errors.push(...validateSkillLayout(root).errors);
   }
+  if (target === "all" || target === "claude") errors.push(...validateClaudePackage(root).errors);
   return errors;
 }
 

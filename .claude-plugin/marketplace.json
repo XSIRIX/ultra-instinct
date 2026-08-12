@@ -1,0 +1,18 @@
+{
+  "name": "ultra-instinct",
+  "description": "Ultra Instinct workflow plugins",
+  "owner": {
+    "name": "XSIRIX"
+  },
+  "plugins": [
+    {
+      "name": "ultra-instinct",
+      "description": "Reliable workflow routing, verification, and review for coding agents",
+      "version": "2.0.0",
+      "source": "./",
+      "author": {
+        "name": "XSIRIX"
+      }
+    }
+  ]
+}

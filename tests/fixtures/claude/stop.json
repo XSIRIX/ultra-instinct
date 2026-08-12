@@ -1,0 +1,7 @@
+{
+  "session_id": "claude-session",
+  "cwd": "/tmp/claude-project",
+  "hook_event_name": "Stop",
+  "stop_hook_active": false,
+  "last_assistant_message": "private message"
+}

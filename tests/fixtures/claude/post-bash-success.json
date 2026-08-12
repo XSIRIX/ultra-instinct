@@ -1,0 +1,13 @@
+{
+  "session_id": "claude-session",
+  "cwd": "/tmp/claude-project",
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "npm test"
+  },
+  "tool_response": {
+    "exitCode": 0,
+    "output": "private output"
+  }
+}
