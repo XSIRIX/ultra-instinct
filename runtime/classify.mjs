@@ -38,7 +38,7 @@ export function classifyTool(tool) {
   const normalizedName = String(tool.name ?? "").toLowerCase();
   if (NATIVE_MUTATIONS.has(normalizedName)) return { mutation: true, verificationKind: null };
 
-  if (["bash", "shell", "sh"].includes(normalizedName)) {
+  if (["bash", "powershell", "pwsh", "shell", "sh"].includes(normalizedName)) {
     const command = commandFrom(tool.input);
     for (const [pattern, kind] of VERIFICATIONS) {
       const match = command.match(pattern);

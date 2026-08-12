@@ -42,7 +42,7 @@ Acceptance requires:
 - when baseline is below 70%, guided improves by at least 20 percentage points;
 - compaction recovery and strict completion stay bounded.
 
-Ignored results live under `evals/results/<label>/<client>/<profile>/`. Each folder contains sanitized traces plus JSON and Markdown summaries. The combined report records client version, exact model slug, operating system, profile, and failure signatures.
+Ignored results live under `.ultra-instinct/evals/<label>/<client>/<profile>/`. Each folder contains sanitized traces plus JSON and Markdown summaries. The combined report records client version, exact model slug, operating system, profile, and failure signatures.
 
 ## Trace contents
 

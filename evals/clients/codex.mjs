@@ -16,7 +16,7 @@ export async function runScenario({ scenario, profile, pluginRoot, workspace, mo
     env: {
       ...process.env,
       ULTRA_INSTINCT_PROFILE: profile,
-      ULTRA_INSTINCT_STATE_DIR: path.join(workspace, ".ultra-eval-state"),
+      ULTRA_INSTINCT_STATE_DIR: path.join(workspace, ".ultra-instinct", "runtime"),
     },
     stdio: ["pipe", "pipe", "pipe"],
   });

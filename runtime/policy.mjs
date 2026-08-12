@@ -37,14 +37,16 @@ export function reduceRuntimeEvent(state, event, bootstrap) {
 
   if (event.stage === STAGES.TOOL_AFTER && event.tool?.success !== false) {
     if (event.tool?.mutation) {
-      nextState.mutationEpoch += 1;
-      nextState.lastMutationAt = event.at ?? Date.now();
-      nextState.lastVerificationAt = null;
-      nextState.verificationKind = null;
-      nextState.gateIssuedForEpoch = null;
-      if (!nextState.firstMutationReminderSent) {
-        nextState.firstMutationReminderSent = true;
-        return { nextState, decision: allowDecision({ context: MUTATION_REMINDER }) };
+      if (isFreshlyVerified(nextState)) {
+        nextState.mutationEpoch += 1;
+        nextState.lastMutationAt = event.at ?? Date.now();
+        nextState.lastVerificationAt = null;
+        nextState.verificationKind = null;
+        nextState.gateIssuedForEpoch = null;
+        if (!nextState.firstMutationReminderSent) {
+          nextState.firstMutationReminderSent = true;
+          return { nextState, decision: allowDecision({ context: MUTATION_REMINDER }) };
+        }
       }
     } else if (event.tool?.verificationKind) {
       nextState.lastVerificationAt = event.at ?? Date.now();

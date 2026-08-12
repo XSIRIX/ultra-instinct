@@ -49,7 +49,7 @@ export async function runScenario({ scenario, profile, pluginRoot, workspace, mo
     cwd: workspace,
     env: {
       ULTRA_INSTINCT_PROFILE: profile,
-      ULTRA_INSTINCT_STATE_DIR: path.join(workspace, ".ultra-eval-state"),
+      ULTRA_INSTINCT_STATE_DIR: path.join(workspace, ".ultra-instinct", "runtime"),
     },
     onValue(value) {
       sessionID ??= value.sessionID ?? value.session_id ?? value.part?.sessionID ?? value.properties?.sessionID ?? null;
@@ -64,7 +64,7 @@ export async function runScenario({ scenario, profile, pluginRoot, workspace, mo
       cwd: workspace,
       env: {
         ULTRA_INSTINCT_PROFILE: profile,
-        ULTRA_INSTINCT_STATE_DIR: path.join(workspace, ".ultra-eval-state"),
+        ULTRA_INSTINCT_STATE_DIR: path.join(workspace, ".ultra-instinct", "runtime"),
       },
     });
     trace.push(...compactTrace.filter((event) => event.type !== "client"));

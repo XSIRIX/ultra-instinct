@@ -9,6 +9,8 @@ Make sure this work has somewhere of its own to live.
 
 **Done when** you're on a branch that belongs to this work, dependencies are installed, and you know whether the test suite was green before you touched anything.
 
+Ignored specs and plans do not require isolation. Files under `.ultra-instinct/` are local working state. Isolate before changing source files or publishing an artifact into a tracked project path.
+
 ## Are you already isolated?
 
 ```bash

@@ -34,7 +34,7 @@ export function parsePrepareArgs(args) {
 async function main() {
   const options = parsePrepareArgs(process.argv.slice(2));
   const manifest = await loadExperimentManifest(options.experiment);
-  const outputDirectory = path.join(harborRoot, "evals/results/harbor", options.label);
+  const outputDirectory = path.join(harborRoot, ".ultra-instinct/harbor", options.label);
   const prepared = await prepareRun({
     ...options,
     manifest,

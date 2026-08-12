@@ -29,6 +29,16 @@ test("normalizes recorded Codex lifecycle fixtures without transcript or model c
   }
 });
 
+test("trusts shell verification only when Codex reports exit code zero", async () => {
+  const input = await fixture("post-bash-success");
+  assert.equal(normalizeCodexEvent(input, {}).tool.success, true);
+  assert.equal(normalizeCodexEvent({
+    ...input,
+    tool_response: { exit_code: 2, output: "private failure" },
+  }, {}).tool.success, false);
+  assert.equal(normalizeCodexEvent({ ...input, tool_response: {} }, {}).tool.success, false);
+});
+
 test("encodes Codex additional context and strict Stop continuation", () => {
   assert.equal(
     encodeCodexDecision("SessionStart", { allow: true, context: bootstrap.context, warning: null, continueSession: false })

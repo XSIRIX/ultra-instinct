@@ -15,3 +15,10 @@ test("package entry resolves without a build step", async () => {
   const entry = await import(path.join(pluginRoot, packageJson.default.main));
   assert.equal(entry.default, entry.UltraInstinctPlugin);
 });
+
+test("release candidate is prepared as a public scoped package", async () => {
+  const packageJson = await import(path.join(pluginRoot, "package.json"), { with: { type: "json" } });
+  assert.equal(packageJson.default.name, "@xsirix/ultra-instinct");
+  assert.equal(packageJson.default.version, "2.0.0-rc.1");
+  assert.equal(packageJson.default.publishConfig?.access, "public");
+});

@@ -41,6 +41,17 @@ test("recognizes common verification commands without retaining the command", ()
   }
 });
 
+test("recognizes verification commands executed through PowerShell", () => {
+  assert.deepEqual(classifyTool({
+    name: "PowerShell",
+    input: { command: "npm test" },
+    success: true,
+  }), {
+    mutation: false,
+    verificationKind: "test",
+  });
+});
+
 test("leaves uncertain shell commands unclassified", () => {
   assert.deepEqual(classifyTool({ name: "Bash", input: { command: "node script.mjs" }, success: true }), {
     mutation: false,

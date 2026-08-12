@@ -20,7 +20,7 @@ test("Codex marketplace exposes explicit install and authentication policies", (
   const marketplace = JSON.parse(readFileSync(path.join(pluginRoot, ".agents/plugins/marketplace.json"), "utf8"));
   const [entry] = marketplace.plugins;
   assert.equal(entry.name, "ultra-instinct");
-  assert.equal(entry.version, "2.0.0");
+  assert.equal(entry.version, "2.0.0-rc.1");
   assert.deepEqual(entry.source, { source: "local", path: "./" });
   assert.deepEqual(entry.policy, { installation: "AVAILABLE", authentication: "ON_INSTALL" });
   assert.equal(entry.category, "Productivity");

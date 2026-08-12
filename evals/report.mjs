@@ -17,7 +17,7 @@ function flagValue(args, flag) {
 async function loadSummary(label, client, profile) {
   try {
     return JSON.parse(await readFile(
-      path.join(root, "evals/results", label, client, profile, "summary.json"),
+      path.join(root, ".ultra-instinct/evals", label, client, profile, "summary.json"),
       "utf8",
     ));
   } catch (error) {
@@ -82,7 +82,7 @@ async function main() {
   const labels = (flagValue(process.argv.slice(2), "--runs") ?? "").split(",").filter(Boolean);
   if (!labels.length) throw new Error("Use --runs <label,label>.");
   const report = await buildReport(labels);
-  const directory = path.join(root, "evals/results", "reports");
+  const directory = path.join(root, ".ultra-instinct/evals", "reports");
   await mkdir(directory, { recursive: true, mode: 0o700 });
   const name = labels.join("-");
   await writeFile(path.join(directory, `${name}.json`), `${JSON.stringify(report, null, 2)}\n`, { mode: 0o600 });

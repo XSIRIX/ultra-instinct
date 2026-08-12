@@ -33,7 +33,7 @@ test("Harbor workflow is pinned, ignored, and cannot launch from an npm check", 
   );
   assert.match(pyproject, /"harbor==0\.16\.1"/);
   assert.match(lock, /name = "harbor"\s+version = "0\.16\.1"/);
-  assert.match(gitignore, /^evals\/results\/$/m);
+  assert.match(gitignore, /^\.ultra-instinct\/$/m);
 });
 
 test("operator guide separates free setup from paid smoke, pilot, and full runs", async () => {

@@ -31,7 +31,7 @@ export async function runScenario({ scenario, profile, pluginRoot, workspace, mo
     cwd: workspace,
     env: {
       ULTRA_INSTINCT_PROFILE: profile,
-      ULTRA_INSTINCT_STATE_DIR: path.join(workspace, ".ultra-eval-state"),
+      ULTRA_INSTINCT_STATE_DIR: path.join(workspace, ".ultra-instinct", "runtime"),
     },
   });
   const metadata = trace.find((event) => event.type === "client");

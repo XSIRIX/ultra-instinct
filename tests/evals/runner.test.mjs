@@ -34,6 +34,6 @@ test("run plans use one canonical scenario set and stable result paths", async (
   assert.equal(scenarios.length, 9);
   assert.equal(plan.length, scenarios.filter(({ profiles }) => profiles.includes("guided")).length * 2);
   assert.ok(plan.every(({ resultDirectory }) =>
-    resultDirectory.startsWith(path.join(root, "evals/results/guided/claude/guided")),
+    resultDirectory.startsWith(path.join(root, ".ultra-instinct/evals/guided/claude/guided")),
   ));
 });

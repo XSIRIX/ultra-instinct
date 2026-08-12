@@ -40,6 +40,15 @@ mkdir -p .opencode/plugins
 ln -s "$PWD/vendor/ultra-instinct/.opencode/index.mjs" .opencode/plugins/ultra-instinct.mjs
 ```
 
+After the RC is published to npm, add the scoped package to `opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["@xsirix/ultra-instinct@2.0.0-rc.1"]
+}
+```
+
 See [the runtime guide](docs/runtime.md) for profiles, trust, privacy, tested versions, global OpenCode setup, and uninstall commands.
 
 ## Profiles
@@ -80,7 +89,8 @@ Claude Code and OpenCode also expose workflow commands plus reviewer and debugge
 ## Safety
 
 - User and repository instructions always win.
-- Hooks do not use the network, install packages, edit project files, call a model, or run checks.
+- Hooks do not use the network, install packages, edit project source files, call a model, or run checks.
+- Local drafts, runtime facts, and eval output stay under ignored `.ultra-instinct/`.
 - State contains only mutation and verification facts. It never stores prompts, transcripts, source, filenames, tool arguments, output, environment values, or credentials.
 - Runtime failures allow the client action and emit a short warning.
 - There are zero production dependencies and no postinstall script.

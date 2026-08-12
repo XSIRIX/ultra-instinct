@@ -24,7 +24,8 @@ export function validateClaudePackage(pluginRoot) {
   const entry = marketplace.plugins?.find((plugin) => plugin.name === root.name);
   if (!entry || entry.source !== "./") errors.push("Claude marketplace must contain the local plugin");
 
-  for (const event of ["SessionStart", "PreToolUse", "PostToolUse", "Stop", "SessionEnd"]) {
+  if (hooks.hooks?.PreToolUse !== undefined) errors.push("Claude hooks must not run before tools");
+  for (const event of ["SessionStart", "PostToolUse", "Stop", "SessionEnd"]) {
     if (!Array.isArray(hooks.hooks?.[event])) errors.push(`Claude hooks missing ${event}`);
   }
   for (const command of SURFACES.commands) {

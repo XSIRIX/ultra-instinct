@@ -89,7 +89,7 @@ export function compareRuns(baseline, candidate) {
 
 async function loadGrades(label) {
   safeLabel(label);
-  const directory = path.join(root, "evals/results", label);
+  const directory = path.join(root, ".ultra-instinct/evals", label);
   const files = [];
   async function walk(current) {
     for (const entry of await readdir(current, { withFileTypes: true })) {
@@ -116,7 +116,7 @@ async function main() {
   safeLabel(baselineLabel);
   safeLabel(candidateLabel);
   const report = compareRuns(await loadGrades(baselineLabel), await loadGrades(candidateLabel));
-  const output = path.join(root, "evals/results", `${baselineLabel}-vs-${candidateLabel}.json`);
+  const output = path.join(root, ".ultra-instinct/evals", `${baselineLabel}-vs-${candidateLabel}.json`);
   await writeFile(output, `${JSON.stringify(report, null, 2)}\n`, { mode: 0o600 });
   console.log(JSON.stringify(report, null, 2));
   if (!report.passed) process.exitCode = 1;

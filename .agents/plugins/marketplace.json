@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "ultra-instinct",
-      "version": "2.0.0",
+      "version": "2.0.0-rc.1",
       "source": {
         "source": "local",
         "path": "./"

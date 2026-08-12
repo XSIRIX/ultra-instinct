@@ -20,6 +20,18 @@ function shellInput(toolName, args) {
     : null;
 }
 
+function shellExitCode(output) {
+  for (const value of [
+    output?.metadata?.exit,
+    output?.metadata?.exitCode,
+    output?.metadata?.exit_code,
+    output?.metadata?.code,
+  ]) {
+    if (Number.isInteger(value)) return value;
+  }
+  return null;
+}
+
 export function registerOpenCodeConfig(config, pluginRoot) {
   const skillsPath = path.resolve(pluginRoot, "skills");
   config.skills ??= {};
@@ -60,10 +72,12 @@ export function normalizeOpenCodeEvent(native, context = {}) {
     };
   } else if (type === "tool.execute.after") {
     stage = "tool.after";
+    const toolName = native.input?.tool ?? "unknown";
+    const input = shellInput(toolName, native.input?.args);
     tool = {
-      name: native.input?.tool ?? "unknown",
-      input: shellInput(native.input?.tool, native.input?.args),
-      success: true,
+      name: toolName,
+      input,
+      success: input === null || shellExitCode(native.output) === 0,
     };
   } else if (type === "file.edited") {
     stage = "tool.after";

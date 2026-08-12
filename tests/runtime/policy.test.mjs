@@ -18,7 +18,7 @@ test("lite profile performs no guidance or state transition", () => {
   assert.equal(result.decision.context, null);
 });
 
-test("first successful mutation increments the epoch and reminds once", () => {
+test("repeated mutations coalesce into one dirty cycle and remind once", () => {
   const first = reduceRuntimeEvent(
     createInitialState(),
     runtimeEvent({ stage: "tool.after", tool: { mutation: true, verificationKind: null, success: true } }),
@@ -31,8 +31,31 @@ test("first successful mutation increments the epoch and reminds once", () => {
   );
   assert.equal(first.nextState.mutationEpoch, 1);
   assert.match(first.decision.context, /TDD/i);
-  assert.equal(second.nextState.mutationEpoch, 2);
+  assert.equal(second.nextState.mutationEpoch, 1);
+  assert.equal(second.nextState.lastMutationAt, first.nextState.lastMutationAt);
   assert.equal(second.decision.context, null);
+});
+
+test("fresh verification closes a dirty cycle so the next mutation opens another", () => {
+  const first = reduceRuntimeEvent(
+    createInitialState(),
+    runtimeEvent({ stage: "tool.after", tool: { mutation: true, verificationKind: null, success: true } }),
+    bootstrap,
+  );
+  const verified = reduceRuntimeEvent(
+    first.nextState,
+    runtimeEvent({ stage: "tool.after", at: 2_000, tool: { mutation: false, verificationKind: "test", success: true } }),
+    bootstrap,
+  );
+  const second = reduceRuntimeEvent(
+    verified.nextState,
+    runtimeEvent({ stage: "tool.after", at: 3_000, tool: { mutation: true, verificationKind: null, success: true } }),
+    bootstrap,
+  );
+
+  assert.equal(second.nextState.mutationEpoch, 2);
+  assert.equal(second.nextState.lastMutationAt, 3_000);
+  assert.equal(second.nextState.lastVerificationAt, null);
 });
 
 test("fresh verification records only family and time", () => {
@@ -63,6 +86,30 @@ test("strict completion intervenes once per unverified mutation epoch", () => {
   assert.equal(first.nextState.gateIssuedForEpoch, 1);
   assert.equal(second.decision.allow, true);
   assert.equal(second.decision.continueSession, false);
+});
+
+test("later edits do not rearm strict completion within the same dirty cycle", () => {
+  const dirty = { ...createInitialState(), mutationEpoch: 1, lastMutationAt: 1_000 };
+  const gated = reduceRuntimeEvent(
+    dirty,
+    runtimeEvent({ profile: "strict", stage: "session.completing" }),
+    bootstrap,
+  );
+  const edited = reduceRuntimeEvent(
+    gated.nextState,
+    runtimeEvent({ profile: "strict", stage: "tool.after", at: 2_000, tool: { mutation: true, success: true } }),
+    bootstrap,
+  );
+  const completion = reduceRuntimeEvent(
+    edited.nextState,
+    runtimeEvent({ profile: "strict", stage: "session.completing" }),
+    bootstrap,
+  );
+
+  assert.equal(edited.nextState.mutationEpoch, 1);
+  assert.equal(edited.nextState.gateIssuedForEpoch, 1);
+  assert.equal(completion.decision.allow, true);
+  assert.equal(completion.decision.continueSession, false);
 });
 
 test("strict mode respects recursion and explicit user workflow overrides", () => {

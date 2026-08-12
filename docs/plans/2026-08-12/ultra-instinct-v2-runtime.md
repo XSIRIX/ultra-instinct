@@ -24,7 +24,7 @@
 - Initial v2 skill count: exactly thirteen.
 - Hooks MUST fail open on runtime, state, and adapter errors.
 - Hooks MUST NOT store prompts, transcripts, tool arguments, tool output, source text, filenames, environment values, or credentials.
-- Hooks MUST NOT modify project files, install dependencies, run project checks automatically, or make model calls.
+- Hooks MUST NOT modify project source files, install dependencies, run project checks automatically, make model calls, or spawn agents. Fact-only state under ignored `.ultra-instinct/` is allowed.
 - User and repository instructions remain higher priority than Ultra Instinct guidance.
 - `npx skills add xsirix/ultra-instinct` MUST remain a supported skills-only installation.
 - Repository license: MIT. Reused Agent Plugins schema material retains Apache-2.0 attribution; directly reused Superpowers or ECC code retains MIT attribution; Claude Code source is not copied.
@@ -91,14 +91,14 @@
 - Produces: `validatePortablePlugin(pluginRoot: string): Promise<{ manifest: object | null, errors: string[] }>` from `validation/portable.mjs`.
 - Produces: `readSkillFrontmatter(skillFile: string): { name: string | null, description: string | null, body: string, errors: string[] }` and `validateSkillLayout(pluginRoot: string): { names: string[], errors: string[] }` from `validation/skills.mjs`.
 - Produces package scripts: `npm test`, `npm run validate`, `npm run validate:portable`, and `npm run check`.
-- Produces canonical metadata: name `ultra-instinct`, version `2.0.0`, author name `XSIRIX` with URL `https://github.com/XSIRIX`, MIT license, repository `https://github.com/XSIRIX/ultra-instinct`, and `https://agent-plugins.org/schemas/1.0.0/plugin.schema.json`.
+- Produces canonical plugin metadata: name `ultra-instinct`, version `2.0.0-rc.1`, author name `XSIRIX` with URL `https://github.com/XSIRIX`, MIT license, repository `https://github.com/XSIRIX/ultra-instinct`, and `https://agent-plugins.org/schemas/1.0.0/plugin.schema.json`; the npm package is scoped as `@xsirix/ultra-instinct`.
 
 **References:**
 - [Agent Plugins manifest](https://github.com/agentplugins/agent-plugins-spec/blob/bd383552095128f6effe895b9257cfd580a6d179/spec/1.0.0.md#5-manifest)
 - [Agent Plugins fixed skill location](https://github.com/agentplugins/agent-plugins-spec/blob/bd383552095128f6effe895b9257cfd580a6d179/spec/1.0.0.md#6-component-discovery)
 - [Ajv getting started](https://ajv.js.org/guide/getting-started.html)
 
-**Approach:** Write failing manifest and skill-layout tests first. Pin the official 1.0.0 schema in the repository and validate it through `Ajv2020`; record the schema's Apache-2.0 origin in `THIRD_PARTY_NOTICES.md`. `package.json` uses ESM, Node's test runner, Ajv 8.20.0 only under `devDependencies`, an empty `dependencies` object, and no lifecycle install scripts. `validation/cli.mjs` runs all validators registered at that point and exits nonzero with one error per line. Ignore `node_modules/` and `evals/results/` without changing existing ignore rules.
+**Approach:** Write failing manifest and skill-layout tests first. Pin the official 1.0.0 schema in the repository and validate it through `Ajv2020`; record the schema's Apache-2.0 origin in `THIRD_PARTY_NOTICES.md`. `package.json` uses ESM, Node's test runner, Ajv 8.20.0 only under `devDependencies`, an empty `dependencies` object, and no lifecycle install scripts. `validation/cli.mjs` runs all validators registered at that point and exits nonzero with one error per line. Ignore `node_modules/`, legacy `evals/results/`, and the unified `.ultra-instinct/` local workspace.
 
 **Verify:**
 
@@ -191,7 +191,7 @@ npm run validate:portable
 - Approved spec sections “Shared runtime contract,” “Runtime state,” “Profiles,” and “Failure handling and safety.”
 - [Codex hook tool coverage](https://learn.chatgpt.com/docs/hooks#tool-coverage) — normalized Bash and `apply_patch` names.
 
-**Approach:** Use TDD for each pure module before wiring the facade. State keys hash client, session, and workspace; state lives in `ULTRA_INSTINCT_STATE_DIR` or `os.tmpdir()/ultra-instinct-runtime`, uses owner-only permissions where supported, stays under 4 KiB, and expires after seven days. Only successful native mutation tools increment `mutationEpoch`; common shell mutations are classified conservatively. Only successful recognized verification families set verification state. `guided` emits context without denying; `strict` returns one continuation decision per unverified epoch and then allows the next completion attempt. `lite` performs no state writes. Missing IDs, corrupt state, permission failures, unsupported events, and exceptions all return an allow decision with at most one warning. A fixture benchmark samples at least 1,000 in-memory reductions and asserts p95 below 50 ms.
+**Approach:** Use TDD for each pure module before wiring the facade. State keys hash client, session, and workspace; state lives in `ULTRA_INSTINCT_STATE_DIR` or `.ultra-instinct/runtime/`, uses owner-only permissions where supported, stays under 4 KiB, and expires after seven days. The first successful native mutation after startup or verification opens one dirty cycle and increments `mutationEpoch`; later mutations in that cycle do not rewrite state or rearm the gate. Common shell mutations are classified conservatively. Only successful recognized verification families close the cycle. `guided` emits context without denying; `strict` returns one continuation decision per unverified epoch and then allows the next completion attempt. `lite` performs no state writes. Missing IDs, corrupt state, permission failures, unsupported events, and exceptions all return an allow decision with at most one warning. A fixture benchmark samples at least 1,000 in-memory reductions and asserts p95 below 50 ms.
 
 **Verify:**
 
@@ -227,7 +227,6 @@ npm run check
 - Create: `agents/debugger.md`
 - Create: `validation/claude.mjs`
 - Create: `tests/fixtures/claude/session-start.json`
-- Create: `tests/fixtures/claude/pre-write.json`
 - Create: `tests/fixtures/claude/post-bash-success.json`
 - Create: `tests/fixtures/claude/stop.json`
 - Create: `tests/fixtures/claude/session-end.json`
@@ -249,7 +248,7 @@ npm run check
 - [Claude Code hooks reference](https://code.claude.com/docs/en/hooks)
 - [Claude Code plugin validation](https://code.claude.com/docs/en/plugins-reference#test-your-plugins-locally)
 
-**Approach:** Start with recorded fixture tests for every native payload and expected output. The shared `hooks/hooks.json` registers synchronous `SessionStart`, `PreToolUse`, `PostToolUse`, `Stop`, and `SessionEnd` commands using `node "${CLAUDE_PLUGIN_ROOT}/hooks/dispatch.mjs"`, explicit matchers, two-second timeouts, and bounded additional context. Claude normalization maps startup/resume/clear/compact sources, native edit tools, Bash results, `stop_hook_active`, and session end into the runtime contract. Stop encoding uses Claude's supported block/continue shape only when `strict` requests continuation. Commands contain only enough text to load their named canonical skill. Agent prompts load `request-review` or `systematic-debugging`; they do not duplicate methodology.
+**Approach:** Start with recorded fixture tests for every active native payload and expected output. The shared `hooks/hooks.json` registers synchronous `SessionStart`, `PostToolUse`, `Stop`, and `SessionEnd` commands using `node "${CLAUDE_PLUGIN_ROOT}/hooks/dispatch.mjs"`, explicit matchers, two-second timeouts, and bounded additional context. Claude normalization maps startup/resume/clear/compact sources, successful native edit tools, Bash results, `stop_hook_active`, and session end into the runtime contract. Stop encoding uses Claude's supported block/continue shape only when `strict` requests continuation. Commands contain only enough text to load their named canonical skill. Agent prompts load `request-review` or `systematic-debugging`; they do not duplicate methodology.
 
 **Verify:**
 
@@ -275,7 +274,6 @@ claude plugin validate .
 - Create: `adapters/codex.mjs`
 - Create: `validation/codex.mjs`
 - Create: `tests/fixtures/codex/session-start.json`
-- Create: `tests/fixtures/codex/pre-apply-patch.json`
 - Create: `tests/fixtures/codex/post-bash-success.json`
 - Create: `tests/fixtures/codex/stop.json`
 - Create: `tests/fixtures/codex/session-end.json`
@@ -321,7 +319,6 @@ npm run check
 - Create: `.opencode/index.mjs`
 - Create: `adapters/opencode.mjs`
 - Create: `validation/opencode.mjs`
-- Create: `tests/fixtures/opencode/tool-before.json`
 - Create: `tests/fixtures/opencode/tool-after.json`
 - Create: `tests/fixtures/opencode/file-edited.json`
 - Create: `tests/fixtures/opencode/session-idle.json`
@@ -343,7 +340,7 @@ npm run check
 - [`@opencode-ai/sdk` 1.2.15 package](https://www.npmjs.com/package/@opencode-ai/sdk/v/1.2.15) — generated types installed alongside the validated OpenCode 1.18.15 use the flat `session.prompt({ sessionID, parts })` signature.
 - [Superpowers OpenCode adapter](https://github.com/obra/superpowers/blob/44c9b2d6e889982ac18c27d05a19fefe335194e1/.opencode/plugins/superpowers.js)
 
-**Approach:** Build the adapter against a fake OpenCode context before loading the real plugin entry. The config hook appends the repository `skills/` path exactly once and registers the six commands plus reviewer/debugger definitions from `SURFACES`. `experimental.chat.messages.transform` prepends the marked router to the first user message and deduplicates repeated transforms. `experimental.session.compacting` appends fact-only state to `output.context` without replacing OpenCode's prompt. Named `tool.execute.before` and `tool.execute.after` handlers normalize tool facts. One general `event` handler dispatches `file.edited`, `session.idle`, and `session.deleted` by `event.type`, matching OpenCode's documented session-event shape. On the first strict unverified idle event, call `client.session.prompt` for that session with one continuation request; never call it again for the same mutation epoch. Guided mode logs or shows a warning without continuing. Session deletion removes state. SDK or plugin errors warn and leave OpenCode running.
+**Approach:** Build the adapter against a fake OpenCode context before loading the real plugin entry. The config hook appends the repository `skills/` path exactly once and registers the six commands plus reviewer/debugger definitions from `SURFACES`. `experimental.chat.messages.transform` prepends the marked router to the first user message and deduplicates repeated transforms. `experimental.session.compacting` appends fact-only state to `output.context` without replacing OpenCode's prompt. The post-execution handler normalizes successful tool facts. One general `event` handler dispatches `file.edited`, `session.idle`, and `session.deleted` by `event.type`, matching OpenCode's documented session-event shape. On the first strict unverified idle event, call `client.session.prompt` for that session with one continuation request; never call it again for the same dirty cycle. Guided mode logs or shows a warning without continuing. Session deletion removes state. SDK or plugin errors warn and leave OpenCode running.
 
 **Verify:**
 
@@ -390,7 +387,7 @@ npm run check
 - Produces: `gradeTrace(scenario, trace): ScenarioGrade`, where routing passes only when the expected skill is loaded or announced before the first mutating tool event.
 - Produces: `compareRuns(baseline, candidate): ComparisonReport` enforcing per-case, overall-positive, false-positive, and improvement thresholds.
 - Produces package scripts: `npm run eval`, `npm run eval:compare`, and `npm run eval:report`.
-- Produces ignored results under `evals/results/`; each run creates nested directories named from its explicit label, client, and profile, containing sanitized JSON traces plus Markdown and JSON summary reports.
+- Produces ignored results under `.ultra-instinct/evals/`; each run creates nested directories named from its explicit label, client, and profile, containing sanitized JSON traces plus Markdown and JSON summary reports.
 
 **References:**
 - Approved spec section “Verification and release gates.”

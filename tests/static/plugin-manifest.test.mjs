@@ -12,7 +12,7 @@ test("the repository manifest conforms to Agent Plugins 1.0", async () => {
 
   assert.deepEqual(result.errors, []);
   assert.equal(result.manifest.name, "ultra-instinct");
-  assert.equal(result.manifest.version, "2.0.0");
+  assert.equal(result.manifest.version, "2.0.0-rc.1");
 });
 
 test("portable validation rejects closed manifest fields", async () => {

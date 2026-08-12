@@ -1,6 +1,6 @@
 {
-  "name": "ultra-instinct",
-  "version": "2.0.0",
+  "name": "@xsirix/ultra-instinct",
+  "version": "2.0.0-rc.1",
   "description": "A lightweight cross-client workflow runtime for coding agents",
   "type": "module",
   "main": ".opencode/index.mjs",
@@ -10,6 +10,21 @@
   "engines": {
     "node": ">=20"
   },
+  "files": [
+    ".agents/",
+    ".claude-plugin/",
+    ".codex-plugin/",
+    ".opencode/",
+    "adapters/",
+    "agents/",
+    "commands/",
+    "hooks/",
+    "runtime/",
+    "schemas/",
+    "skills/",
+    "plugin.json",
+    "THIRD_PARTY_NOTICES.md"
+  ],
   "scripts": {
     "test": "node validation/test.mjs",
     "validate": "node validation/cli.mjs",
@@ -32,5 +47,8 @@
     "ajv": "8.20.0"
   },
   "license": "MIT",
-  "repository": "https://github.com/XSIRIX/ultra-instinct"
+  "repository": "https://github.com/XSIRIX/ultra-instinct",
+  "publishConfig": {
+    "access": "public"
+  }
 }

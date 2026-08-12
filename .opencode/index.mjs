@@ -63,11 +63,6 @@ export async function UltraInstinctPlugin(ctx) {
       if (decision.warning) await apply({ ...decision, context: null }, input.sessionID);
     },
 
-    "tool.execute.before": async (input, output) => {
-      const decision = await run({ type: "tool.execute.before", input, output }, input.sessionID);
-      await apply(decision, input.sessionID);
-    },
-
     "tool.execute.after": async (input, output) => {
       const decision = await run({ type: "tool.execute.after", input, output }, input.sessionID);
       if (["write", "edit", "patch", "apply_patch", "multiedit", "notebookedit"].includes(String(input.tool).toLowerCase())) {

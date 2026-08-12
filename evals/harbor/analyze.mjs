@@ -415,7 +415,7 @@ function parseArguments(argv) {
 
 export async function analyzeCli(argv = process.argv.slice(2)) {
   const options = parseArguments(argv);
-  const runDirectory = path.join(root, "evals", "results", "harbor", options.run);
+  const runDirectory = path.join(root, ".ultra-instinct", "harbor", options.run);
   const runManifest = JSON.parse(
     await readFile(path.join(runDirectory, "run-manifest.json"), "utf8"),
   );

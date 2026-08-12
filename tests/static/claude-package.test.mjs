@@ -12,7 +12,8 @@ test("Claude package metadata, hooks, commands, and agents validate", () => {
 
 test("shared hooks use the plugin root, two-second timeouts, and required lifecycle events", () => {
   const config = JSON.parse(readFileSync(path.join(pluginRoot, "hooks/hooks.json"), "utf8"));
-  for (const event of ["SessionStart", "PreToolUse", "PostToolUse", "Stop", "SessionEnd"]) {
+  assert.equal(config.hooks.PreToolUse, undefined);
+  for (const event of ["SessionStart", "PostToolUse", "Stop", "SessionEnd"]) {
     assert.ok(config.hooks[event]);
     for (const group of config.hooks[event]) {
       for (const hook of group.hooks) {

@@ -71,6 +71,19 @@ test("normalizes OpenCode direct hooks and general events without private paths 
   }
 });
 
+test("trusts OpenCode shell verification only when metadata.exit is zero", async () => {
+  const input = await fixture("tool-after");
+  assert.equal(normalizeOpenCodeEvent(input, {}).tool.success, true);
+  assert.equal(normalizeOpenCodeEvent({
+    ...input,
+    output: { ...input.output, metadata: { exit: 1 } },
+  }, {}).tool.success, false);
+  assert.equal(normalizeOpenCodeEvent({
+    ...input,
+    output: { ...input.output, metadata: {} },
+  }, {}).tool.success, false);
+});
+
 test("applies strict continuation through the current flat SDK contract and fails open", async () => {
   const client = fakeClient();
   await applyOpenCodeDecision(
@@ -128,4 +141,13 @@ test("plugin injects once, restores compacted facts, continues strict once, and 
 
   await hooks.event({ event: await fixture("session-deleted") });
   assert.equal(readdirSync(stateDir).filter((name) => name.endsWith(".json")).length, 0);
+});
+
+test("plugin does not register a before-tool hook", async () => {
+  const hooks = await UltraInstinctPlugin({
+    client: fakeClient(),
+    directory: "/tmp/opencode-project",
+    ultra: { profile: "guided" },
+  });
+  assert.equal(hooks["tool.execute.before"], undefined);
 });

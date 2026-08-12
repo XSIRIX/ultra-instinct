@@ -65,7 +65,7 @@ The pilot adds the following twelve tasks, giving ten software/debugging tasks a
 
 ### Run preparation
 
-`evals/harbor/prepare.mjs` accepts a reviewed manifest, label, exact model, exact Codex version, reasoning effort, environment, and concurrency. It validates all values and writes two ignored files beneath `evals/results/harbor/<label>/`:
+`evals/harbor/prepare.mjs` accepts a reviewed manifest, label, exact model, exact Codex version, reasoning effort, environment, and concurrency. It validates all values and writes two ignored files beneath `.ultra-instinct/harbor/<label>/`:
 
 - `job.json`, consumed by `harbor run -c`;
 - `run-manifest.json`, the immutable experimental record used by the reporter.
@@ -112,7 +112,7 @@ The reporter writes `comparison.json` and `comparison.md` beside the run manifes
 - Default local concurrency is 1. Cloud concurrency must be supplied explicitly and is capped at 32 by preparation.
 - The smoke may run with Docker. Pilot and full runs should use an x86 cloud environment because the current local Docker host is ARM with 8 GB memory.
 - Primary grading is deterministic verifier reward. LLM-as-judge output cannot decide acceptance.
-- Generated artifacts live under ignored `evals/results/harbor/`.
+- Generated artifacts live under ignored `.ultra-instinct/harbor/`.
 - Setup and tests must not consume model credits.
 
 ## References

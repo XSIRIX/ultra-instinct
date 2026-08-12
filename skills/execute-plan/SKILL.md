@@ -49,9 +49,9 @@ Other installed skills exist for a reason. If a task touches a domain one covers
 
 ## Delegating tasks
 
-Optional. Worth it when a task is well-specified and self-contained and your context is filling with detail you won't need again.
+Optional. Keep one primary agent responsible for integration and the final result. Delegate only independent work with read-only or clearly non-overlapping file ownership, or an explicit review. Never run two implementers against overlapping files.
 
-If you delegate: one task per subagent, never two implementers at once (they'll collide on the same files). Hand over the task text, its Interfaces block, its References, and the Constraints — not your session history. Point at files rather than pasting them; anything pasted into a prompt lives in your context for the rest of the session.
+If you delegate: one task per subagent. Hand over the task text, its Interfaces block, its References, and the Constraints — not your session history. Point at files rather than pasting them; anything pasted into a prompt lives in your context for the rest of the session.
 
 Verify the result yourself — read the diff, run the tests. A subagent reporting success is a claim, not evidence. If one comes back blocked, give it more context or a stronger model; don't re-run the same thing and hope.
 

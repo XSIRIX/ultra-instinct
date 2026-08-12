@@ -11,7 +11,14 @@ Write for a capable engineer who knows nothing about this codebase, and who will
 
 **Done when** every spec requirement maps to a task, every task states how it's verified, and the interfaces between tasks line up exactly.
 
-Save to `docs/plans/YYYY-MM-DD/<feature>.md`.
+Save to `.ultra-instinct/plans/YYYY-MM-DD/<feature>.md`.
+
+Before writing, create the local workspace and its inner safety net. Never overwrite an existing inner ignore file:
+
+```bash
+mkdir -p .ultra-instinct/plans/YYYY-MM-DD
+test -e .ultra-instinct/.gitignore || printf '*\n' > .ultra-instinct/.gitignore
+```
 
 **One folder per day**, same as the design specs. A flat directory becomes fifty files nobody can scan. Create the folder if the day doesn't have one yet. Honor an existing project convention over this default.
 
@@ -38,7 +45,7 @@ Most features are 3–8 tasks. Fifteen means they're too small; one means it's t
 ```markdown
 # <Feature> — Implementation Plan
 
-**Design spec:** docs/design/YYYY-MM-DD/<topic>.md
+**Design spec:** .ultra-instinct/design/YYYY-MM-DD/<topic>.md
 **Goal:** One sentence on what this builds.
 **Approach:** 2–3 sentences on the architecture.
 **Stack:** Key libraries, with the versions this project is on.
@@ -120,4 +127,6 @@ Fix inline and move on. No second review pass.
 
 ## Hand off
 
-Save it, commit it, say where it is. Then use `execute-plan`.
+If the user explicitly asks to publish or commit the plan, use `isolate-work` and copy the finalized file to `docs/plans/YYYY-MM-DD/<feature>.md`. Update its design-spec link to the published design path when that copy exists.
+
+Otherwise, save it locally and say where it is. Then use `execute-plan`.

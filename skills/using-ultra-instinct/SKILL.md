@@ -10,13 +10,15 @@ Select the smallest matching skill before acting, including before exploration o
 
 User and repository instructions take priority. Never manufacture process the user did not ask for. If directly assigned a narrow subtask, do that task.
 
+One primary agent owns the task and its final result. Delegate only independent read-only research, non-overlapping implementation, or an explicit review. Hooks never spawn agents or dispatch agents.
+
 ## Route by the current need
 
 - Unsettled goal, behavior, or approach: `brainstorm`.
 - Visual layout, screen, or flow decision: `mockup`.
 - Agreed design that needs a durable spec: `write-design-spec`.
 - Approved spec or clear requirements that need build tasks: `write-plan`.
-- First committed artifact or implementation needs isolation: `isolate-work`.
+- Tracked artifact or implementation needs isolation: `isolate-work`.
 - Approved plan needs full implementation: `execute-plan`.
 - Feature, fix, or behavior change: `tdd`.
 - Unexplained failure: `systematic-debugging`, then `tdd` after the cause is confirmed.

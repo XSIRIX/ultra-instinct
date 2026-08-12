@@ -50,7 +50,7 @@ export function createRunPlan(options, scenarios, root = pluginRoot) {
       profile: options.profile,
       scenario,
       repeat: index + 1,
-      resultDirectory: path.join(root, "evals/results", options.label, client, options.profile),
+      resultDirectory: path.join(root, ".ultra-instinct/evals", options.label, client, options.profile),
     })),
   ));
 }
@@ -80,7 +80,7 @@ async function loadModels(label) {
   const models = {};
   for (const client of EVAL_CLIENTS) {
     for (const profile of EVAL_PROFILES) {
-      const file = path.join(pluginRoot, "evals/results", label, client, profile, "summary.json");
+      const file = path.join(pluginRoot, ".ultra-instinct/evals", label, client, profile, "summary.json");
       try {
         const summary = JSON.parse(await readFile(file, "utf8"));
         const model = summary.grades?.find((grade) => grade.model)?.model;
@@ -100,7 +100,7 @@ async function driverFor(client) {
 async function writeSummaries(grades, options) {
   for (const client of options.clients) {
     const selected = grades.filter((grade) => grade.client === client);
-    const directory = path.join(pluginRoot, "evals/results", options.label, client, options.profile);
+    const directory = path.join(pluginRoot, ".ultra-instinct/evals", options.label, client, options.profile);
     const summary = {
       schema: "ultra.eval-summary.v1",
       label: options.label,

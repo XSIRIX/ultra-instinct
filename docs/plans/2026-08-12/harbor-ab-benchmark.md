@@ -13,7 +13,7 @@
 - Require exact model and Codex version inputs; reject floating aliases.
 - `codex-vanilla` must register no Ultra capabilities. `codex-ultra-guided` must install the native local plugin with `ULTRA_INSTINCT_PROFILE=guided`.
 - Use one shared agent implementation, task set, concurrency pool, authentication method, prompt, permissions, timeout, and verifier.
-- Keep generated jobs and results under ignored `evals/results/harbor/`.
+- Keep generated jobs and results under ignored `.ultra-instinct/harbor/`.
 - Deterministic verifier reward is the primary outcome; no LLM judge participates.
 - Errored trials count as zero and invalidate the inferential verdict until rerun.
 - Commit once per task after its focused check and the full repository suite pass.

@@ -5,7 +5,7 @@ description: Use when an implementation is complete and before merging or openin
 
 # Request Review
 
-One reviewer, over the whole branch, once. Fix what's real in a single pass and move on.
+One reviewer, over the whole branch, once. This is an explicit review boundary, not automatic delegation from a hook. Fix what's real in a single pass and move on.
 
 When feedback arrives, process it with `receiving-code-review` before changing code.
 

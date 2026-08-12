@@ -23,7 +23,7 @@ Agent Plugins 1.0 is the portable packaging floor. It standardizes a root `plugi
 7. The bootstrap MUST tell the agent to select and load a matching skill before acting, preserve direct user and repository instructions as higher priority, and remain at or below 2,400 UTF-8 bytes after frontmatter is removed.
 8. The runtime MUST restore the bootstrap after context compaction and include only machine-observed state: whether changes were made and whether fresh verification followed them.
 9. The runtime MUST NOT store prompts, transcripts, tool arguments, tool output, source text, filenames, environment values, or credentials.
-10. Hooks MUST NOT make network requests, install dependencies, modify project files, run tests automatically, or make subjective product decisions.
+10. Hooks MUST NOT make network requests, install dependencies, modify project source files, run tests automatically, spawn agents, or make subjective product decisions. Writing fact-only state beneath ignored `.ultra-instinct/` is allowed.
 11. A runtime or state error MUST fail open in every profile, preserve the client action, and emit one concise warning. Methodology enforcement MUST never make the client unusable.
 12. User instructions MUST win. If the user explicitly requests a different workflow, Ultra Instinct MAY warn about an objective risk but MUST NOT silently override the request.
 13. The initial v2 catalog MUST contain exactly thirteen canonical skills: the existing ten plus `systematic-debugging`, `verification-before-completion`, and `receiving-code-review`.
@@ -76,7 +76,6 @@ Supported lifecycle stages are:
 
 - `session.start`
 - `context.compacting`
-- `tool.before`
 - `tool.after`
 - `session.completing`
 - `session.end`
@@ -101,11 +100,11 @@ State contains only deterministic facts needed across hook calls:
 }
 ```
 
-A successful native file mutation increments `mutationEpoch` and clears the current verification. Conservative client-neutral classifiers MAY recognize common shell-based mutation and verification commands, but uncertain commands MUST remain unclassified.
+A dirty cycle opens on the first successful native file mutation after startup or fresh verification. Opening a dirty cycle increments `mutationEpoch` and clears the current verification. Later edits in the same dirty cycle do not rewrite state, reset the gate, or emit another reminder. Conservative client-neutral classifiers MAY recognize common shell-based mutation and verification commands, but uncertain commands MUST remain unclassified.
 
 A verification is fresh only when a recognized verification command finishes successfully after the latest mutation. Recognized families include package-manager `test`, `check`, `typecheck`, `lint`, and `build` scripts plus common direct runners such as `pytest`, `cargo test`, `go test`, `dotnet test`, `mvn verify`, `gradle test`, `swift test`, `xcodebuild test`, `make test`, and `git diff --check`. The classifier stores only the verification family and timestamp, never the original command.
 
-State files live under `ULTRA_INSTINCT_STATE_DIR` when set and otherwise under the operating system temporary directory in `ultra-instinct-runtime/`. The directory uses owner-only permissions where the operating system supports them. Filenames are hashes of client, session, and workspace identity. State is removed on a normal session end and entries older than seven days are discarded on startup. A corrupt or unsupported state file is ignored and replaced.
+State files live under `ULTRA_INSTINCT_STATE_DIR` when set and otherwise under workspace-local `.ultra-instinct/runtime/`. The runtime creates `.ultra-instinct/.gitignore` containing `*` when missing and never overwrites it. The directory uses owner-only permissions where the operating system supports them. Filenames are hashes of client, session, and workspace identity. State is removed on a normal session end and entries older than seven days are discarded on startup. A corrupt or unsupported state file is ignored and replaced.
 
 ### Profiles
 
@@ -121,7 +120,7 @@ State files live under `ULTRA_INSTINCT_STATE_DIR` when set and otherwise under t
 
 The first-mutation reminder is emitted once per session. It asks the agent to use TDD for behavior changes, systematic debugging for unexplained failures, and brainstorming only when the intended behavior is unsettled. It does not block the mutation.
 
-In `strict`, an unverified completion is interrupted once for the current `mutationEpoch`. The context explains that files changed after the latest recognized verification and asks the agent to run appropriate checks or clearly explain why none apply. A second completion attempt for the same epoch is allowed with a warning, preventing hook loops. A later mutation starts a new epoch and permits one new intervention.
+In `strict`, an unverified completion is interrupted once for the current `mutationEpoch`. The context explains that files changed after the latest recognized verification and asks the agent to run appropriate checks or clearly explain why none apply. A second completion attempt for the same epoch is allowed with a warning, preventing hook loops. Fresh successful verification closes the dirty cycle; the next mutation starts a new epoch and permits one new intervention.
 
 ### Bootstrap and routing
 
@@ -148,7 +147,6 @@ The bootstrap MUST include a stable deduplication marker. Adapters MUST ensure t
 |---|---|---|---|
 | `session.start` | `SessionStart` | `SessionStart` | `config` skill registration plus `experimental.chat.messages.transform` |
 | `context.compacting` | compact/clear `SessionStart` and compaction lifecycle | compaction lifecycle and restarted `SessionStart` | `experimental.session.compacting` appends Ultra state to `output.context` |
-| `tool.before` | `PreToolUse` | `PreToolUse` | `tool.execute.before` |
 | `tool.after` | `PostToolUse` and failure event | `PostToolUse` | `tool.execute.after` plus `file.edited` when available |
 | `session.completing` | `Stop` | `Stop` | `session.idle` |
 | `session.end` | `SessionEnd` | `SessionEnd` | `session.deleted` |
@@ -177,6 +175,12 @@ Claude Code and OpenCode also expose two specialist agents:
 
 Agent definitions may translate tool names and isolation features for their client, but their methodology remains in the canonical skill. Missing command or agent support MUST NOT prevent manual or automatic skill use.
 
+One primary agent owns each task and its final result. Delegation is reserved for independent read-only research, non-overlapping implementation, or explicit review. Runtime hooks never dispatch agents.
+
+### Local artifacts
+
+Draft design specs, plans, mockups, runtime facts, evaluation traces, and Harbor jobs live under ignored `.ultra-instinct/`. Creating local artifacts does not require branch isolation. Only an explicit publish request copies a finalized spec or plan into tracked `docs/design/` or `docs/plans/`; source edits and published artifacts use the normal isolation workflow.
+
 ### Packaging and installation
 
 The package supports two intentionally different installation modes:
@@ -184,7 +188,7 @@ The package supports two intentionally different installation modes:
 - **Skills-only:** the existing Skills CLI command installs `skills/` and behaves as `lite`.
 - **Runtime plugin:** each supported client installs the repository through its native plugin mechanism and defaults to `guided`.
 
-Claude Code receives a valid marketplace and plugin manifest. Codex receives the Agent Plugins root manifest plus a `.codex-plugin` compatibility manifest while the released client surface transitions to the shared standard. OpenCode loads a published JavaScript entry point from the Git repository through its `plugin` configuration and automatically registers the canonical skill directory.
+Claude Code receives a valid marketplace and plugin manifest. Codex receives the Agent Plugins root manifest plus a `.codex-plugin` compatibility manifest while the released client surface transitions to the shared standard. OpenCode loads the scoped npm package `@xsirix/ultra-instinct` through its `plugin` configuration and automatically registers the canonical skill directory. Source-checkout loading remains available before publication.
 
 The runtime package MUST contain no postinstall script. After the client has installed or resolved the plugin package, Ultra Instinct hooks MUST NOT initiate network downloads during client startup or lifecycle events.
 
@@ -239,6 +243,7 @@ A release report records client versions, operating system, model, profile, scen
 - Hook runtime budget: 50 ms p95 in fixture tests and a hard client timeout of two seconds.
 - Network access during hook execution: none.
 - Default profile: `guided`.
+- Release candidate version: `2.0.0-rc.1`.
 - Skill count in the initial v2 release: thirteen.
 - Repository license: MIT, with third-party attribution retained when code is reused.
 

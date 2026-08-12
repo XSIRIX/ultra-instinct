@@ -1,6 +1,6 @@
 ---
 name: write-design-spec
-description: Use when a design has been agreed and the work is going to be built — captures the design and its requirements as a document, including the references and mockups it was grounded in. Covers system design and frontend design alike. First committed artifact, so it also triggers isolation. Follows brainstorm, precedes write-plan.
+description: Use when a design has been agreed and the work is going to be built — captures the design and its requirements as a local artifact, including the references and mockups it was grounded in. Covers system design and frontend design alike. Follows brainstorm, precedes write-plan.
 ---
 
 # Write Design Spec
@@ -11,33 +11,24 @@ Covers whatever kind of design the work needed — system architecture, a data m
 
 **Done when** someone who wasn't in the conversation could read it and build the right thing — with no placeholders, no contradictions, and no requirement that could be read two ways.
 
-## Isolate first
+## Keep drafts local
 
-This file is the work's first committed artifact. Before creating it, use `isolate-work` to get onto a dedicated branch or worktree. If you're already isolated, that skill detects it and returns immediately.
+Save the working spec to `.ultra-instinct/design/YYYY-MM-DD/<topic>.md`. Local artifacts do not require a branch or worktree.
 
-Design doc, plan, and implementation all live on the same branch, so the branch tells the whole story.
-
-**Bring the visuals in now.** Mockups from brainstorming were built in a temp directory outside the repo, so exploring three takes wouldn't put anything in the user's checkout before anyone committed to building. Now that the branch exists, the chosen one gets committed:
+Before writing, make the local workspace and its inner safety net. Never overwrite an existing inner ignore file:
 
 ```bash
-mkdir -p docs/design/YYYY-MM-DD/assets
-cp "<mockup-dir>/<chosen>.html" docs/design/YYYY-MM-DD/assets/
-git add docs/design/YYYY-MM-DD/assets/<chosen>.html
+mkdir -p .ultra-instinct/design/YYYY-MM-DD
+test -e .ultra-instinct/.gitignore || printf '*\n' > .ultra-instinct/.gitignore
 ```
 
-`<mockup-dir>` is the absolute temp path `mockup` printed when it built them. If you don't have it, ask rather than guessing — a temp path isn't reconstructible.
-
-**Copy the file you already built. Do not rebuild it.** The committed asset must be the exact thing the user looked at and picked — same bytes. Regenerating it from your description of it, or "cleaning it up" on the way in, means the implementer builds from a copy of a memory instead of from the approved design.
-
-If the mockup referenced project assets by absolute path, fix those to repo-relative paths *after* committing the original, as a separate visible change — so the diff shows exactly what moved away from what was approved.
-
-Link it from Visuals with one line on why that take won. Leave the rejected takes in scratch.
+Link a chosen mockup directly from `.ultra-instinct/mockups/<topic>/`. Do not rebuild it.
 
 ## What this document is
 
 *What and why*, precise enough to build from. Not *how and in what order* — that's `write-plan`. No task breakdown, no file-by-file steps.
 
-Save to `docs/design/YYYY-MM-DD/<topic>.md`.
+Save to `.ultra-instinct/design/YYYY-MM-DD/<topic>.md`.
 
 **One folder per day.** A flat directory becomes fifty files nobody can scan. The date folder keeps a day's work together, sorts chronologically, and stays browsable after a year. Create it if it doesn't exist; add to it if the day already has one. Honor an existing project convention over this default.
 
@@ -99,9 +90,11 @@ Read it back cold, as if you hadn't written it. It's ready when:
 
 Fix what you find inline. No second pass.
 
-## Hand off
+## Publish only on request
 
-Commit it, then give the user the chance to read it:
+If the user explicitly asks to publish or commit the spec, use `isolate-work`, copy the finalized file to `docs/design/YYYY-MM-DD/<topic>.md`, copy any chosen visual unchanged into that date folder's `assets/`, and update its links. The tracked copy is the published artifact; the local copy remains working state.
+
+Otherwise, give the user the local path and the chance to read it:
 
 > Design spec is at `<path>`. Worth a read before I plan the implementation — say the word and I'll start.
 

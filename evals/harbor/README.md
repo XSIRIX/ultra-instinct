@@ -35,8 +35,8 @@ npm run eval:harbor:prepare -- \
 
 This writes only:
 
-- `evals/results/harbor/smoke-001/job.json`
-- `evals/results/harbor/smoke-001/run-manifest.json`
+- `.ultra-instinct/harbor/smoke-001/job.json`
+- `.ultra-instinct/harbor/smoke-001/run-manifest.json`
 
 Both are ignored by Git. Read both files before launch. Confirm the model, Codex version, source commit, task count, attempt count, and expected trials.
 
@@ -54,7 +54,7 @@ Local Docker smoke — 3 tasks × 1 attempt × 2 conditions = **6 trials**:
 
 ```bash
 uv run --project evals/harbor --locked \
-  harbor run -c evals/results/harbor/smoke-001/job.json
+  harbor run -c .ultra-instinct/harbor/smoke-001/job.json
 ```
 
 Do not add `--yes`: Harbor should show any host-access or sharing prompt. Running locally does not upload results by default. Do not run `harbor upload` unless you separately choose to publish them.
@@ -87,7 +87,7 @@ npm run eval:harbor:prepare -- \
   --environment daytona \
   --concurrency 4
 uv run --project evals/harbor --extra daytona --locked \
-  harbor run -c evals/results/harbor/pilot-001/job.json
+  harbor run -c .ultra-instinct/harbor/pilot-001/job.json
 ```
 
 Full — all 89 tasks × 5 attempts × 2 conditions = **890 trials**. Prepare it the same way with `--experiment full --label full-001`. Run it only after the pilot is valid and useful.
@@ -101,7 +101,7 @@ Harbor writes a dated job folder beneath the prepared run's `harbor-jobs/` direc
 ```bash
 npm run eval:harbor:analyze -- \
   --run smoke-001 \
-  --job-dir evals/results/harbor/smoke-001/harbor-jobs/REPLACE_WITH_JOB_FOLDER
+  --job-dir .ultra-instinct/harbor/smoke-001/harbor-jobs/REPLACE_WITH_JOB_FOLDER
 ```
 
 The command writes `comparison.json` and `comparison.md` beside the run manifest. It does not call a model and does not upload anything.

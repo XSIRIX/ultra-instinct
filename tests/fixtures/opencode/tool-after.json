@@ -11,6 +11,8 @@
   "output": {
     "title": "Tests",
     "output": "private output",
-    "metadata": {}
+    "metadata": {
+      "exit": 0
+    }
   }
 }

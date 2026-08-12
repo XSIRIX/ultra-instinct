@@ -34,6 +34,17 @@ test("maps compact SessionStart to context restoration", async () => {
   assert.equal(normalizeClaudeEvent(input, {}).stage, "context.compacting");
 });
 
+test("trusts Claude success and failure hook events without inventing an exit-code field", async () => {
+  const input = await fixture("post-bash-success");
+  assert.equal(normalizeClaudeEvent(input, {}).tool.success, true);
+  assert.equal(normalizeClaudeEvent({
+    ...input,
+    hook_event_name: "PostToolUseFailure",
+    tool_response: undefined,
+    error: "private failure",
+  }, {}).tool.success, false);
+});
+
 test("encodes Claude context and bounded Stop decisions", () => {
   const start = encodeClaudeDecision("SessionStart", {
     allow: true,

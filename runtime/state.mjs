@@ -18,15 +18,17 @@ import { createInitialState, isRuntimeState } from "./contracts.mjs";
 const MAX_STATE_BYTES = 4096;
 const STATE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
-function defaultStateDir() {
-  return process.env.ULTRA_INSTINCT_STATE_DIR || path.join(os.tmpdir(), "ultra-instinct-runtime");
+export function resolveStateDir(workspace = null) {
+  if (process.env.ULTRA_INSTINCT_STATE_DIR) return process.env.ULTRA_INSTINCT_STATE_DIR;
+  if (workspace) return path.join(workspace, ".ultra-instinct", "runtime");
+  return path.join(os.tmpdir(), "ultra-instinct-runtime");
 }
 
 function fileName(key) {
   return `${createHash("sha256").update(String(key)).digest("hex")}.json`;
 }
 
-export function createStateStore({ stateDir = defaultStateDir(), clock = Date.now, warningSink = () => {} } = {}) {
+export function createStateStore({ stateDir = resolveStateDir(), clock = Date.now, warningSink = () => {} } = {}) {
   const warned = new Set();
   const warn = (category, message) => {
     if (warned.has(category)) return;
@@ -34,6 +36,17 @@ export function createStateStore({ stateDir = defaultStateDir(), clock = Date.no
     warningSink(message);
   };
   const ensureDirectory = () => {
+    const artifactRoot = path.dirname(stateDir);
+    if (path.basename(artifactRoot) === ".ultra-instinct") {
+      mkdirSync(artifactRoot, { recursive: true, mode: 0o700 });
+      try {
+        writeFileSync(path.join(artifactRoot, ".gitignore"), "*\n", { flag: "wx", mode: 0o600 });
+      } catch (error) {
+        if (error.code !== "EEXIST") {
+          warn("artifact-ignore", "Ultra Instinct: local artifact ignore file could not be created.");
+        }
+      }
+    }
     mkdirSync(stateDir, { recursive: true, mode: 0o700 });
     try { chmodSync(stateDir, 0o700); } catch {}
   };

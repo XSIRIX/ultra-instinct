@@ -80,7 +80,16 @@ rm -rf vendor/ultra-instinct
 
 For a global source install, place the link in `~/.config/opencode/plugins/` instead. OpenCode executes local plugins as code with your user permissions; it does not provide a plugin sandbox. Inspect the checkout before loading it.
 
-When the package is published to npm, OpenCode can instead install the module with `opencode plugin ultra-instinct`. Until publication is verified, use the source install above.
+When the RC is published to npm, add it to the `plugin` list in project or global `opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["@xsirix/ultra-instinct@2.0.0-rc.1"]
+}
+```
+
+OpenCode installs configured npm plugins automatically with Bun. Until publication is verified, use the source install above.
 
 ## Profiles
 
@@ -126,9 +135,9 @@ It stores only:
 - the last successful verification timestamp and broad family, such as `test`;
 - whether the first reminder or strict gate was already issued.
 
-Files are at most 4 KiB. Their names are SHA-256 hashes of the client/session/workspace key. The directory and files are owner-only where supported. State is deleted at normal session end, and stale files older than seven days are removed. Set `ULTRA_INSTINCT_STATE_DIR` to override the operating-system temporary directory.
+Files are at most 4 KiB. Their names are SHA-256 hashes of the client/session/workspace key. By default they live in `.ultra-instinct/runtime/` inside the workspace. Ultra Instinct creates `.ultra-instinct/.gitignore` with `*` when missing and never overwrites it. The directory and files are owner-only where supported. State is deleted at normal session end, and stale files older than seven days are removed. Set `ULTRA_INSTINCT_STATE_DIR` to choose another directory.
 
-Hooks do not make network requests. They do not install dependencies, edit the project, run checks, call another model, or make product decisions. Errors fail open: the original client action continues.
+Hooks do not make network requests. They do not install dependencies, edit project source files, run checks, call another model, spawn agents, or make product decisions. Errors fail open: the original client action continues.
 
 ## Supported versions
 

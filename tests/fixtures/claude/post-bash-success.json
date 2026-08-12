@@ -7,7 +7,9 @@
     "command": "npm test"
   },
   "tool_response": {
-    "exitCode": 0,
-    "output": "private output"
+    "stdout": "private output",
+    "stderr": "",
+    "interrupted": false,
+    "isImage": false
   }
 }

@@ -27,3 +27,10 @@ test("package exposes deterministic checks and all live evaluation commands", as
   assert.equal(packageJson.scripts["eval:compare"], "node evals/compare.mjs");
   assert.equal(packageJson.scripts["eval:report"], "node evals/report.mjs");
 });
+
+test("current runtime design matches post-tool-only hooks and local-first artifacts", async () => {
+  const design = await readFile(path.join(root, "docs/design/2026-08-12/ultra-instinct-v2-runtime.md"), "utf8");
+  assert.doesNotMatch(design, /PreToolUse|tool\.execute\.before/);
+  assert.match(design, /\.ultra-instinct/);
+  assert.match(design, /dirty cycle/i);
+});
