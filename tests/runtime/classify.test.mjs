@@ -10,6 +10,13 @@ test("classifies successful native writes as mutations", () => {
   });
 });
 
+test("classifies OpenCode patch tools as mutations", () => {
+  assert.deepEqual(classifyTool({ name: "patch", input: null, success: true }), {
+    mutation: true,
+    verificationKind: null,
+  });
+});
+
 test("does not count failed writes", () => {
   assert.deepEqual(classifyTool({ name: "Write", input: {}, response: {}, success: false }), {
     mutation: false,

@@ -3,6 +3,10 @@
   "version": "2.0.0",
   "description": "A lightweight cross-client workflow runtime for coding agents",
   "type": "module",
+  "main": ".opencode/index.mjs",
+  "exports": {
+    ".": "./.opencode/index.mjs"
+  },
   "engines": {
     "node": ">=20"
   },
@@ -12,6 +16,7 @@
     "validate:portable": "node validation/cli.mjs portable",
     "validate:claude": "node validation/cli.mjs claude",
     "validate:codex": "node validation/cli.mjs codex",
+    "validate:opencode": "node validation/cli.mjs opencode",
     "check": "npm run validate && npm test"
   },
   "dependencies": {},

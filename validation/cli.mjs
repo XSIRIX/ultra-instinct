@@ -5,6 +5,7 @@ import { validatePortablePlugin } from "./portable.mjs";
 import { validateSkillLayout } from "./skills.mjs";
 import { validateClaudePackage } from "./claude.mjs";
 import { validateCodexPackage } from "./codex.mjs";
+import { validateOpenCodePackage } from "./opencode.mjs";
 
 const pluginRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -16,6 +17,7 @@ export async function runValidation(target = "all", root = pluginRoot) {
   }
   if (target === "all" || target === "claude") errors.push(...validateClaudePackage(root).errors);
   if (target === "all" || target === "codex") errors.push(...validateCodexPackage(root).errors);
+  if (target === "all" || target === "opencode") errors.push(...(await validateOpenCodePackage(root)).errors);
   return errors;
 }
 

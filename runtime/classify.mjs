@@ -3,6 +3,7 @@ const NATIVE_MUTATIONS = new Set([
   "edit",
   "multiedit",
   "notebookedit",
+  "patch",
   "write",
   "file.edit",
   "file.write",

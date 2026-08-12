@@ -9,6 +9,8 @@ One reviewer, over the whole branch, once. Fix what's real in a single pass and 
 
 When feedback arrives, process it with `receiving-code-review` before changing code.
 
+If you are already the reviewer subagent, review directly and return findings. Do not dispatch another reviewer or modify the branch.
+
 Why a subagent instead of reading the diff yourself: you wrote this code, and you'll read past your own assumptions. A fresh reader catches what you can't see, and the diff never enters your context — only the findings do.
 
 ## Prepare the diff

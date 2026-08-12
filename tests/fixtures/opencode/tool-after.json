@@ -1,0 +1,16 @@
+{
+  "type": "tool.execute.after",
+  "input": {
+    "tool": "bash",
+    "sessionID": "opencode-session",
+    "callID": "call-2",
+    "args": {
+      "command": "npm test"
+    }
+  },
+  "output": {
+    "title": "Tests",
+    "output": "private output",
+    "metadata": {}
+  }
+}

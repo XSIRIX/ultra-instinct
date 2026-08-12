@@ -1,0 +1,14 @@
+{
+  "type": "tool.execute.before",
+  "input": {
+    "tool": "write",
+    "sessionID": "opencode-session",
+    "callID": "call-1"
+  },
+  "output": {
+    "args": {
+      "filePath": "/private/file.ts",
+      "content": "private source"
+    }
+  }
+}

@@ -22,8 +22,17 @@ export function reduceRuntimeEvent(state, event, bootstrap) {
   if (event.profile === "lite") return { nextState: state, decision: allowDecision() };
   const nextState = { ...state };
 
-  if (event.stage === STAGES.SESSION_START || event.stage === STAGES.CONTEXT_COMPACTING) {
+  if (event.stage === STAGES.SESSION_START) {
     return { nextState, decision: allowDecision({ context: bootstrap.context }) };
+  }
+
+  if (event.stage === STAGES.CONTEXT_COMPACTING) {
+    const fact = !isFreshlyVerified(nextState)
+      ? "\n\nUltra observed facts: an unverified mutation exists since the latest recognized verification."
+      : nextState.verificationKind
+        ? `\n\nUltra observed facts: fresh ${nextState.verificationKind} verification followed the latest mutation.`
+        : "";
+    return { nextState, decision: allowDecision({ context: `${bootstrap.context}${fact}` }) };
   }
 
   if (event.stage === STAGES.TOOL_AFTER && event.tool?.success !== false) {
