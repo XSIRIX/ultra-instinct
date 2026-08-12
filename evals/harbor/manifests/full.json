@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "name": "full",
   "harborVersion": "0.16.1",
-  "sourceCommit": "2cca6a873630adbc43c354ac564026b54e98b71c",
+  "sourceCommit": "9aa1d290e9fd67cfe844f9e90e3aeb11fcca869c",
   "dataset": {
     "name": "terminal-bench/terminal-bench-2-1",
     "ref": "6"
