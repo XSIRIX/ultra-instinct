@@ -20,7 +20,8 @@
     "check": "npm run validate && npm test",
     "eval": "node evals/run.mjs",
     "eval:compare": "node evals/compare.mjs",
-    "eval:report": "node evals/report.mjs"
+    "eval:report": "node evals/report.mjs",
+    "eval:harbor:prepare": "node evals/harbor/prepare.mjs"
   },
   "dependencies": {},
   "devDependencies": {

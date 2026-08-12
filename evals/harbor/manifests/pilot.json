@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "name": "pilot",
+  "harborVersion": "0.16.1",
+  "sourceCommit": "ce3f5da4e6dca5fbeebece061976379835ba70b4",
+  "dataset": {
+    "name": "terminal-bench/terminal-bench-2-1",
+    "ref": "6"
+  },
+  "conditions": [
+    "codex-vanilla",
+    "codex-ultra-guided"
+  ],
+  "attempts": 3,
+  "expectedTaskCount": 15,
+  "expectedTrials": 90,
+  "taskNames": [
+    "build-cython-ext",
+    "cancel-async-tasks",
+    "cobol-modernization",
+    "configure-git-webserver",
+    "custom-memory-heap-crash",
+    "db-wal-recovery",
+    "fix-code-vulnerability",
+    "fix-ocaml-gc",
+    "git-multibranch",
+    "large-scale-text-editing",
+    "log-summary-date-ranges",
+    "modernize-scientific-stack",
+    "openssl-selfsigned-cert",
+    "pypi-server",
+    "regex-log"
+  ],
+  "taskStrata": {
+    "software": [
+      "build-cython-ext",
+      "cancel-async-tasks",
+      "cobol-modernization",
+      "custom-memory-heap-crash",
+      "db-wal-recovery",
+      "fix-code-vulnerability",
+      "fix-ocaml-gc",
+      "git-multibranch",
+      "modernize-scientific-stack",
+      "pypi-server"
+    ],
+    "neutral": [
+      "configure-git-webserver",
+      "large-scale-text-editing",
+      "log-summary-date-ranges",
+      "openssl-selfsigned-cert",
+      "regex-log"
+    ]
+  },
+  "bootstrap": {
+    "seed": 20260812,
+    "iterations": 10000
+  }
+}

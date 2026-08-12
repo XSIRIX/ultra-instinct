@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "name": "full",
+  "harborVersion": "0.16.1",
+  "sourceCommit": "ce3f5da4e6dca5fbeebece061976379835ba70b4",
+  "dataset": {
+    "name": "terminal-bench/terminal-bench-2-1",
+    "ref": "6"
+  },
+  "conditions": [
+    "codex-vanilla",
+    "codex-ultra-guided"
+  ],
+  "attempts": 5,
+  "expectedTaskCount": 89,
+  "expectedTrials": 890,
+  "taskNames": null,
+  "taskStrata": null,
+  "bootstrap": {
+    "seed": 20260812,
+    "iterations": 10000
+  }
+}
