@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -55,11 +55,25 @@ export function createRunPlan(options, scenarios, root = pluginRoot) {
   ));
 }
 
-async function createFixture(fixture) {
+export async function createFixture(fixture) {
   const workspace = await mkdtemp(path.join(os.tmpdir(), "ultra-instinct-eval-"));
   const files = fixture === "typo"
     ? { "README.md": "Please recieve this tiny example.\n" }
-    : {
+    : fixture === "capture-existing"
+      ? {
+          "docs/features/request-retries.md": "# Request Retries\n\n## Summary\n\nThe client retries one transient server failure immediately.\n",
+          ".ultra-instinct/design/retry-notes.md": [
+            "# Working notes",
+            "",
+            "The client now retries HTTP 429 and 5xx up to three times with 200 ms, 400 ms, and 800 ms delays.",
+            "Authentication failures are never retried. The shared HTTP client owns the policy.",
+            "Verification: `node --test tests/request-retries.test.mjs` passed 4 tests.",
+            "Limitation: retry budgets are per request, not shared across processes.",
+            "FAKE_PRIVATE_PROMPT_DO_NOT_COPY",
+            "",
+          ].join("\n"),
+        }
+      : {
         "package.json": `${JSON.stringify({ type: "module", scripts: { test: "node --test" } }, null, 2)}\n`,
         "index.js": fixture === "failing-test"
           ? "export function add(a, b) { return a - b; }\n"
@@ -72,8 +86,45 @@ async function createFixture(fixture) {
           "",
         ].join("\n"),
       };
-  await Promise.all(Object.entries(files).map(([name, content]) => writeFile(path.join(workspace, name), content)));
-  return workspace;
+  await Promise.all(Object.entries(files).map(async ([name, content]) => {
+    const file = path.join(workspace, name);
+    await mkdir(path.dirname(file), { recursive: true });
+    await writeFile(file, content);
+  }));
+  return { workspace, files };
+}
+
+async function listFiles(directory, prefix = "") {
+  const entries = await readdir(directory, { withFileTypes: true }).catch((error) => {
+    if (error.code === "ENOENT") return [];
+    throw error;
+  });
+  const nested = await Promise.all(entries.map((entry) => {
+    const relative = path.join(prefix, entry.name);
+    return entry.isDirectory()
+      ? listFiles(path.join(directory, entry.name), relative)
+      : [relative];
+  }));
+  return nested.flat();
+}
+
+export async function collectArtifactEvidence(scenario, workspace, initialFiles) {
+  const expectation = scenario.artifactExpectation;
+  if (!expectation) return null;
+  const expectedFile = path.join(workspace, expectation.path);
+  const content = await readFile(expectedFile, "utf8").catch((error) => {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  });
+  const docsFiles = await listFiles(path.join(workspace, "docs"));
+  const docsContent = await Promise.all(docsFiles.map((file) =>
+    readFile(path.join(workspace, "docs", file), "utf8")));
+  return {
+    expectedPathExists: content !== null,
+    expectedPathChanged: content !== null && content !== initialFiles[expectation.path],
+    docsFileCount: docsFiles.length,
+    forbiddenTextFound: docsContent.some((value) => value.includes(expectation.forbiddenText)),
+  };
 }
 
 async function loadModels(label) {
@@ -142,7 +193,8 @@ export async function runEval(options) {
   const grades = [];
   for (const item of plan) {
     await mkdir(item.resultDirectory, { recursive: true, mode: 0o700 });
-    const workspace = await createFixture(item.scenario.fixture);
+    const fixture = await createFixture(item.scenario.fixture);
+    const { workspace } = fixture;
     try {
       const { runScenario } = await driverFor(item.client);
       const trace = await runScenario({
@@ -154,8 +206,9 @@ export async function runEval(options) {
       });
       const metadata = trace.find((event) => event.type === "client") ?? {};
       if (!metadata.model) throw new Error(`${item.client} did not report its exact active model slug.`);
+      const artifactEvidence = await collectArtifactEvidence(item.scenario, workspace, fixture.files);
       const grade = {
-        ...gradeTrace(item.scenario, trace),
+        ...gradeTrace(item.scenario, trace, artifactEvidence),
         client: item.client,
         profile: item.profile,
         repeat: item.repeat,

@@ -219,8 +219,9 @@ The live suite MUST include positive and negative scenarios:
 - A new feature selects brainstorming before mutation.
 - A clear small behavior change selects TDD without unnecessary design ceremony.
 - An unexplained failure selects systematic debugging.
-- A typo-only edit does not force brainstorming or a design artifact.
-- A read-only explanation does not enter an implementation workflow.
+- A typo-only edit does not force brainstorming, a design artifact, or `capture-artifact`.
+- A read-only explanation does not enter an implementation workflow or `capture-artifact`.
+- Freshly verified meaningful work selects `capture-artifact`, updates an existing topic in place, creates no duplicate, and excludes private working text.
 - Compaction preserves routing and stale-verification state.
 - Guided mode warns but completes without fresh verification.
 - Strict mode intervenes once, then accepts successful fresh verification.

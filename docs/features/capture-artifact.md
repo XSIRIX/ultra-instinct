@@ -9,6 +9,8 @@ Ultra Instinct turns the lasting result of a completed meaningful workflow into 
 - The `capture-artifact` skill chooses an existing project docs convention, updates an existing topic when possible, and otherwise selects a small semantic path under `docs/`.
 - The canonical router now selects it only for freshly verified, meaningful tracked work.
 - The completion flow is `verification-before-completion` → `capture-artifact` → `request-review`.
+- Whole-work review includes committed, staged, unstaged, and untracked artifacts.
+- The live evaluation matrix checks in-place topic updates, duplicate prevention, private-text exclusion, and skip behavior for trivial and read-only work.
 - Ultra Instinct now ships fourteen canonical skills across Claude Code, Codex, OpenCode, and skills-only installs.
 
 ## Decisions
@@ -22,11 +24,11 @@ Ultra Instinct turns the lasting result of a completed meaningful workflow into 
 
 ## Verification
 
-- `npm run check` validated the skill, lifecycle order, router byte budget, catalog, metadata, runtime, adapters, packaging, and all 107 tests.
+- `npm run check` validated the skill, lifecycle order, router byte budget, catalog, metadata, runtime, adapters, packaging, and all 110 tests.
 - The Skill Creator validator accepted `skills/capture-artifact/SKILL.md` and its `agents/openai.yaml` metadata.
 - `npm run eval:harbor:check` passed 13 Node checks and 4 Python tests against the pinned implementation commit.
 - `claude plugin validate .` accepted the Claude marketplace, and `npm pack --json --dry-run` included the new skill in the RC package.
-- The ignored `sol-medium-v2-rc1-smoke-002` Harbor job is prepared for `openai/gpt-5.6-sol` at medium reasoning with 6 expected trials. No paid run started.
+- A disposable forward test updated an existing topic in place and excluded its fake private prompt. The maintained live scenario now grades the same behavior without storing document content in results.
 
 ## Limitations
 

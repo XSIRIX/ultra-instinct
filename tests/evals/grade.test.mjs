@@ -88,3 +88,41 @@ test("compaction scenarios require a compact event and restored bootstrap", () =
   assert.equal(grade.compactionPassed, true);
   assert.equal(grade.passed, true);
 });
+
+test("artifact scenarios require an in-place update without duplication or leakage", () => {
+  const capture = {
+    ...scenario,
+    id: "capture-update-existing",
+    expectedSkill: "capture-artifact",
+    verificationExpected: false,
+    artifactExpectation: {
+      mode: "update-existing",
+      path: "docs/features/request-retries.md",
+      forbiddenText: "FAKE_PRIVATE_PROMPT_DO_NOT_COPY",
+      expectedDocsFileCount: 1,
+    },
+  };
+  const trace = [
+    { type: "skill", skill: "capture-artifact", action: "loaded", sequence: 1 },
+    { type: "tool", category: "mutation", tool: "edit", success: true, sequence: 2 },
+  ];
+
+  const passing = gradeTrace(capture, trace, {
+    expectedPathExists: true,
+    expectedPathChanged: true,
+    docsFileCount: 1,
+    forbiddenTextFound: false,
+  });
+  assert.equal(passing.artifactPassed, true);
+  assert.equal(passing.passed, true);
+
+  for (const evidence of [
+    { expectedPathExists: true, expectedPathChanged: false, docsFileCount: 1, forbiddenTextFound: false },
+    { expectedPathExists: true, expectedPathChanged: true, docsFileCount: 2, forbiddenTextFound: false },
+    { expectedPathExists: true, expectedPathChanged: true, docsFileCount: 1, forbiddenTextFound: true },
+  ]) {
+    const failed = gradeTrace(capture, trace, evidence);
+    assert.equal(failed.artifactPassed, false);
+    assert.ok(failed.failureSignatures.includes("durable-artifact-invalid"));
+  }
+});

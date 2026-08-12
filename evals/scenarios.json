@@ -34,7 +34,7 @@
     "prompt": "Fix only the misspelling 'recieve' in README.md. Do not broaden the change.",
     "fixture": "typo",
     "expectedSkill": null,
-    "forbiddenSkills": ["brainstorm", "write-design-spec", "write-plan"],
+    "forbiddenSkills": ["brainstorm", "write-design-spec", "write-plan", "capture-artifact"],
     "mutationExpected": true,
     "verificationExpected": false,
     "profiles": ["lite", "guided", "strict"]
@@ -44,10 +44,26 @@
     "prompt": "Read the project and tell me which file exports add(). Do not edit anything.",
     "fixture": "node-package",
     "expectedSkill": null,
-    "forbiddenSkills": ["tdd", "execute-plan", "write-plan"],
+    "forbiddenSkills": ["tdd", "execute-plan", "write-plan", "capture-artifact"],
     "mutationExpected": false,
     "verificationExpected": false,
     "profiles": ["lite", "guided", "strict"]
+  },
+  {
+    "id": "capture-update-existing",
+    "prompt": "The request retry feature is complete and freshly verified. Use Ultra Instinct to capture its durable result for maintainers. Update existing project documentation, do not change product code, and do not copy private working text.",
+    "fixture": "capture-existing",
+    "expectedSkill": "capture-artifact",
+    "forbiddenSkills": ["brainstorm", "write-design-spec", "write-plan"],
+    "mutationExpected": true,
+    "verificationExpected": false,
+    "profiles": ["guided"],
+    "artifactExpectation": {
+      "mode": "update-existing",
+      "path": "docs/features/request-retries.md",
+      "forbiddenText": "FAKE_PRIVATE_PROMPT_DO_NOT_COPY",
+      "expectedDocsFileCount": 1
+    }
   },
   {
     "id": "compaction-state",

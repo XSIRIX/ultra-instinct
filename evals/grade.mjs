@@ -2,7 +2,7 @@ function successful(trace, category) {
   return trace.filter((event) => event.type === "tool" && event.category === category && event.success !== false);
 }
 
-export function gradeTrace(scenario, trace) {
+export function gradeTrace(scenario, trace, artifactEvidence = null) {
   const ordered = [...trace].sort((left, right) => left.sequence - right.sequence);
   const mutations = ordered.filter((event) => event.type === "tool" && event.category === "mutation");
   const verifications = successful(ordered, "verification");
@@ -34,6 +34,12 @@ export function gradeTrace(scenario, trace) {
     ? ordered.some((event) => event.type === "hook" && /stop|complet/i.test(event.stage))
     : true;
   const executionPassed = !ordered.some((event) => event.type === "result" && event.success === false);
+  const artifactPassed = !scenario.artifactExpectation || Boolean(
+    artifactEvidence?.expectedPathExists &&
+    artifactEvidence?.expectedPathChanged &&
+    artifactEvidence?.docsFileCount === scenario.artifactExpectation.expectedDocsFileCount &&
+    artifactEvidence?.forbiddenTextFound === false
+  );
   const falsePositive = !isPositive && forbidden.length > 0;
   const failureSignatures = [];
 
@@ -48,6 +54,7 @@ export function gradeTrace(scenario, trace) {
   if (!compactionPassed) failureSignatures.push("compaction-bootstrap-not-restored");
   if (!guidedWarningPassed) failureSignatures.push("guided-warning-not-observed");
   if (!executionPassed) failureSignatures.push("client-result-failed");
+  if (!artifactPassed) failureSignatures.push("durable-artifact-invalid");
 
   return {
     scenarioId: scenario.id,
@@ -61,6 +68,7 @@ export function gradeTrace(scenario, trace) {
     compactionPassed,
     guidedWarningPassed,
     executionPassed,
+    artifactPassed,
     failureSignatures,
   };
 }

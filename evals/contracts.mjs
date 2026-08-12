@@ -1,6 +1,6 @@
 export const EVAL_CLIENTS = Object.freeze(["claude", "codex", "opencode"]);
 export const EVAL_PROFILES = Object.freeze(["lite", "guided", "strict"]);
-export const EVAL_FIXTURES = Object.freeze(["node-package", "failing-test", "typo"]);
+export const EVAL_FIXTURES = Object.freeze(["node-package", "failing-test", "typo", "capture-existing"]);
 export const TRACE_EVENT_TYPES = Object.freeze([
   "client",
   "skill",
@@ -20,18 +20,20 @@ const SCENARIO_KEYS = Object.freeze([
   "mutationExpected",
   "verificationExpected",
   "profiles",
+  "artifactExpectation",
 ]);
 
 /**
  * @typedef {object} EvalScenario
  * @property {string} id
  * @property {string} prompt
- * @property {"node-package"|"failing-test"|"typo"} fixture
+ * @property {"node-package"|"failing-test"|"typo"|"capture-existing"} fixture
  * @property {string|null} expectedSkill
  * @property {string[]} forbiddenSkills
  * @property {boolean} mutationExpected
  * @property {boolean} verificationExpected
  * @property {(typeof EVAL_PROFILES)[number][]} profiles
+ * @property {{mode:"update-existing",path:string,forbiddenText:string,expectedDocsFileCount:number}=} artifactExpectation
  */
 
 /**
@@ -62,6 +64,27 @@ export function validateScenario(scenario) {
   if (!Array.isArray(scenario.profiles) || !scenario.profiles.length ||
       scenario.profiles.some((profile) => !EVAL_PROFILES.includes(profile))) {
     errors.push("profiles must contain supported profiles");
+  }
+  if (scenario.artifactExpectation !== undefined) {
+    const expectation = scenario.artifactExpectation;
+    const keys = expectation && typeof expectation === "object" && !Array.isArray(expectation)
+      ? Object.keys(expectation).sort()
+      : [];
+    const expectedKeys = ["expectedDocsFileCount", "forbiddenText", "mode", "path"];
+    if (JSON.stringify(keys) !== JSON.stringify(expectedKeys)) {
+      errors.push("artifactExpectation must use the closed artifact contract");
+    } else {
+      if (expectation.mode !== "update-existing") errors.push("artifactExpectation mode is unsupported");
+      if (!/^docs\/[a-z0-9_./-]+\.md$/i.test(expectation.path) || expectation.path.includes("..")) {
+        errors.push("artifactExpectation path must be a safe docs markdown path");
+      }
+      if (typeof expectation.forbiddenText !== "string" || !expectation.forbiddenText) {
+        errors.push("artifactExpectation forbiddenText is required");
+      }
+      if (!Number.isInteger(expectation.expectedDocsFileCount) || expectation.expectedDocsFileCount < 1) {
+        errors.push("artifactExpectation expectedDocsFileCount must be positive");
+      }
+    }
   }
   return errors;
 }

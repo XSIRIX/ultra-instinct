@@ -34,3 +34,11 @@ test("completed plans verify, capture one durable artifact, then request review"
   assert.ok(reviewIndex > captureIndex);
   assert.match(verification, /capture-artifact.+before.+review/is);
 });
+
+test("whole-work review includes committed, tracked working-tree, and untracked changes", async () => {
+  const review = await readFile(path.join(root, "skills/request-review/SKILL.md"), "utf8");
+
+  assert.match(review, /git diff -U10 "\$BASE"(?!\.\.HEAD)/);
+  assert.match(review, /git ls-files --others --exclude-standard -z/);
+  assert.match(review, /untracked/i);
+});

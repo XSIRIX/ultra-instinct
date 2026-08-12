@@ -1,6 +1,6 @@
 ---
 name: request-review
-description: Use when an implementation is complete and before merging or opening a PR — dispatches one reviewer subagent over the whole branch diff, then fixes what it finds in a single pass. Follows execute-plan, precedes finish-branch.
+description: Use when an implementation is complete and before merging or opening a PR — dispatches one reviewer subagent over all committed and working-tree changes, then fixes what it finds in a single pass. Follows execute-plan, precedes finish-branch.
 ---
 
 # Request Review
@@ -21,10 +21,16 @@ Write it to a file. A large diff pasted into a prompt sits in your context for t
 BASE=$(git merge-base main HEAD)   # or whatever this branch forked from
 {
   echo "## Commits"; git log --oneline "$BASE"..HEAD
-  echo; echo "## Files"; git diff --stat "$BASE"..HEAD
-  echo; echo "## Diff"; git diff -U10 "$BASE"..HEAD
+  echo; echo "## Files"; git status --short; git diff --stat "$BASE"
+  echo; echo "## Tracked diff"; git diff -U10 "$BASE"
+  echo; echo "## Untracked files"
+  while IFS= read -r -d '' file; do
+    git diff --no-index -U10 -- /dev/null "$file" || true
+  done < <(git ls-files --others --exclude-standard -z)
 } > /tmp/review-package.md
 ```
+
+Using `git diff "$BASE"` includes committed, staged, and unstaged tracked changes. The final loop adds untracked files, so a newly created artifact is reviewed even when the active workflow did not authorize a commit.
 
 ## Dispatch
 
