@@ -9,7 +9,7 @@ from harbor.agents.installed.codex import Codex
 from evals.harbor.agents.codex_ab import CodexUltraGuided, CodexVanilla
 
 
-SOURCE_COMMIT = "ce3f5da4e6dca5fbeebece061976379835ba70b4"
+SOURCE_COMMIT = "2cca6a873630adbc43c354ac564026b54e98b71c"
 
 
 def make_agent(agent_type, tmp_path: Path, **kwargs):

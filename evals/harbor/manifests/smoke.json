@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "name": "smoke",
   "harborVersion": "0.16.1",
-  "sourceCommit": "ce3f5da4e6dca5fbeebece061976379835ba70b4",
+  "sourceCommit": "2cca6a873630adbc43c354ac564026b54e98b71c",
   "dataset": {
     "name": "terminal-bench/terminal-bench-2-1",
     "ref": "6"
