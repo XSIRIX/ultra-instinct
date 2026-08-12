@@ -22,7 +22,10 @@
     "eval:compare": "node evals/compare.mjs",
     "eval:report": "node evals/report.mjs",
     "eval:harbor:prepare": "node evals/harbor/prepare.mjs",
-    "eval:harbor:analyze": "node evals/harbor/analyze.mjs"
+    "eval:harbor:analyze": "node evals/harbor/analyze.mjs",
+    "eval:harbor:node-check": "node validation/test.mjs tests/harbor tests/static/harbor-benchmark.test.mjs",
+    "eval:harbor:python-check": "uv run --cache-dir /tmp/ultra-harbor-uv --project evals/harbor --group dev --locked pytest evals/harbor/tests",
+    "eval:harbor:check": "npm run eval:harbor:node-check && npm run eval:harbor:python-check"
   },
   "dependencies": {},
   "devDependencies": {

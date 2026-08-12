@@ -95,6 +95,8 @@ npm run eval -- --dry-run --client all --profile guided --repeat 5 --label guide
 
 Deterministic checks are free and local. Live evaluations call paid models and require separate operator consent. See [evals/README.md](evals/README.md).
 
+For end-to-end agent quality, the [Harbor A/B benchmark](evals/harbor/README.md) compares true vanilla Codex with Ultra Instinct `guided` on pinned Terminal-Bench 2.1 tasks. Setup and job preparation are free; model-backed runs require explicit approval.
+
 ## License
 
 MIT. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for retained provenance.
