@@ -10,7 +10,7 @@ import {
   prepareRun,
 } from "../../evals/harbor/contracts.mjs";
 
-const sourceCommit = "9aa1d290e9fd67cfe844f9e90e3aeb11fcca869c";
+const sourceCommit = "fa04e78e4353f62ad89f23de066fc59a97727dd1";
 
 function validOptions(manifest, overrides = {}) {
   return {

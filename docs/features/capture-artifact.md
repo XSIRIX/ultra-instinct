@@ -29,6 +29,7 @@ Ultra Instinct turns the lasting result of a completed meaningful workflow into 
 - `npm run eval:harbor:check` passed 13 Node checks and 4 Python tests against the pinned implementation commit.
 - `claude plugin validate .` accepted the Claude marketplace, and `npm pack --json --dry-run` included the new skill in the RC package.
 - A disposable forward test updated an existing topic in place and excluded its fake private prompt. The maintained live scenario now grades the same behavior without storing document content in results.
+- The ignored `sol-medium-v2-rc1-smoke-003` Harbor job is prepared for `openai/gpt-5.6-sol` at medium reasoning with 6 expected trials. No paid run started.
 
 ## Limitations
 
