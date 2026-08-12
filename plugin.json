@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ultra-instinct",
+  "version": "2.0.0",
+  "description": "A lightweight cross-client workflow runtime for coding agents",
+  "author": {
+    "name": "XSIRIX",
+    "url": "https://github.com/XSIRIX"
+  },
+  "repository": "https://github.com/XSIRIX/ultra-instinct",
+  "license": "MIT",
+  "keywords": ["agent", "skills", "workflow", "coding"]
+}
