@@ -1,0 +1,8 @@
+{
+  "session_id": "codex-session",
+  "cwd": "/tmp/codex-project",
+  "hook_event_name": "SessionEnd",
+  "model": "gpt-5.6-codex",
+  "turn_id": "turn-1",
+  "reason": "other"
+}

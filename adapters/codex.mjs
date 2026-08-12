@@ -4,29 +4,27 @@ const STAGES = Object.freeze({
   SessionStart: "session.start",
   PreToolUse: "tool.before",
   PostToolUse: "tool.after",
-  PostToolUseFailure: "tool.after",
   Stop: "session.completing",
   SessionEnd: "session.end",
 });
 
-export function normalizeClaudeEvent(input, env = {}) {
+export function normalizeCodexEvent(input, env = {}) {
   const eventName = input?.hook_event_name;
   const stage = eventName === "SessionStart" && ["clear", "compact"].includes(input.source)
     ? "context.compacting"
     : STAGES[eventName];
-  if (!stage) throw new TypeError("unsupported Claude hook event");
+  if (!stage) throw new TypeError("unsupported Codex hook event");
 
   const event = {
     schema: RUNTIME_SCHEMA,
-    client: "claude",
+    client: "codex",
     stage,
     sessionId: typeof input.session_id === "string" ? input.session_id : null,
     workspace: typeof input.cwd === "string" ? input.cwd : null,
     profile: env.ULTRA_INSTINCT_PROFILE || "guided",
     at: Date.now(),
   };
-
-  if (["PreToolUse", "PostToolUse", "PostToolUseFailure"].includes(eventName)) {
+  if (["PreToolUse", "PostToolUse"].includes(eventName)) {
     const toolName = typeof input.tool_name === "string" ? input.tool_name : "unknown";
     const isShell = ["bash", "powershell", "shell", "sh"].includes(toolName.toLowerCase());
     event.tool = {
@@ -39,7 +37,7 @@ export function normalizeClaudeEvent(input, env = {}) {
   return event;
 }
 
-export function encodeClaudeDecision(eventName, decision) {
+export function encodeCodexDecision(eventName, decision) {
   if (eventName === "Stop" && decision.continueSession && !decision.allow) {
     return { decision: "block", reason: decision.context || "Continue with fresh verification." };
   }

@@ -1,0 +1,22 @@
+{
+  "name": "ultra-instinct",
+  "version": "2.0.0",
+  "description": "Reliable workflow routing, verification, and review for coding agents",
+  "author": {
+    "name": "XSIRIX",
+    "url": "https://github.com/XSIRIX"
+  },
+  "repository": "https://github.com/XSIRIX/ultra-instinct",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Ultra Instinct",
+    "shortDescription": "Reliable coding workflow guidance.",
+    "longDescription": "Ultra Instinct routes coding work into focused skills and tracks only mutation and verification facts.",
+    "developerName": "XSIRIX",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/XSIRIX/ultra-instinct",
+    "defaultPrompt": "Use Ultra Instinct to choose the right workflow for this task."
+  }
+}

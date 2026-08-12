@@ -11,6 +11,7 @@
     "validate": "node validation/cli.mjs",
     "validate:portable": "node validation/cli.mjs portable",
     "validate:claude": "node validation/cli.mjs claude",
+    "validate:codex": "node validation/cli.mjs codex",
     "check": "npm run validate && npm test"
   },
   "dependencies": {},
