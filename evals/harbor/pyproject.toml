@@ -1,0 +1,25 @@
+[project]
+name = "ultra-instinct-harbor-evals"
+version = "0.1.0"
+description = "Pinned Harbor environment for Ultra Instinct A/B evaluations"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "harbor==0.16.1",
+]
+
+[project.optional-dependencies]
+daytona = [
+  "harbor[daytona]==0.16.1",
+]
+
+[dependency-groups]
+dev = [
+  "pytest==8.4.2",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["../.."]
