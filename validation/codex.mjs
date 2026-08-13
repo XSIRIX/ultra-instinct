@@ -22,8 +22,10 @@ export function validateCodexPackage(pluginRoot) {
   if (manifest.author?.name !== root.author?.name) errors.push("Codex manifest author must match plugin.json");
   if (!SEMVER.test(manifest.version ?? "")) errors.push("Codex manifest version must be strict semver");
   if (manifest.skills !== "./skills/") errors.push("Codex skills path must be ./skills/");
-  if (Object.hasOwn(manifest, "hooks")) errors.push("Codex manifest must use default hook discovery");
-  if (!existsSync(path.join(pluginRoot, "hooks/hooks.json"))) errors.push("Codex default hooks/hooks.json is missing");
+  if (manifest.hooks !== "./hooks/hooks.json") {
+    errors.push("Codex hooks path must explicitly expose ./hooks/hooks.json");
+  }
+  if (!existsSync(path.join(pluginRoot, "hooks/hooks.json"))) errors.push("Codex hooks/hooks.json is missing");
 
   const requiredInterface = ["displayName", "shortDescription", "longDescription", "developerName", "category", "capabilities", "defaultPrompt"];
   for (const field of requiredInterface) {

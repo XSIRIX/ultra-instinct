@@ -19,6 +19,8 @@ test("README and runtime guide document every client, profile, install mode, and
   assert.match(runtime, /paid live model/i);
   assert.match(runtime, /no prompt|never stores prompts/i);
   assert.match(runtime, /--allow-client-state/);
+  assert.match(combined, /Codex Desktop/i);
+  assert.match(combined, /\/hooks/);
 });
 
 test("package exposes deterministic checks and all live evaluation commands", async () => {

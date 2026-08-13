@@ -20,3 +20,8 @@ test("the canonical router names every skill and keeps user instructions first",
   assert.match(router.body, /User and repository instructions (?:win|take priority)/i);
   assert.doesNotMatch(router.body, /nine skills|no session(?:-start)? injection/i);
 });
+
+test("the canonical router matches every coding task as the Desktop fallback", () => {
+  const router = readSkillFrontmatter(path.join(root, "skills/using-ultra-instinct/SKILL.md"));
+  assert.match(router.description, /start of any coding task/i);
+});

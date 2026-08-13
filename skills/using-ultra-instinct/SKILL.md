@@ -1,6 +1,6 @@
 ---
 name: using-ultra-instinct
-description: Use when the user asks about ultra-instinct itself, asks which workflow fits, or says "use ultra instinct". Routes work to the smallest matching skill. Not a workflow step and produces no artifact.
+description: Use at the start of any coding task to select the smallest matching Ultra Instinct workflow before acting. Also use when the user asks about Ultra Instinct itself or which workflow fits. Not a workflow step and produces no artifact.
 ---
 
 <!-- ultra-instinct:bootstrap:v2 -->

@@ -32,6 +32,8 @@ codex plugin marketplace add XSIRIX/ultra-instinct
 codex plugin add ultra-instinct@ultra-instinct
 ```
 
+Codex Desktop: install Ultra Instinct from the Plugins screen, then start a new task. The router skill applies to every coding task, so workflow selection still works before executable hooks are trusted. The plugin declares its hooks explicitly so supported Desktop builds can show their review step. If your Desktop build does not show hook review yet, open `/hooks` once in Codex CLI; Codex Desktop and CLI share the persisted trust state.
+
 OpenCode can load the source checkout directly. Clone it under your project, then link its entry point:
 
 ```bash
@@ -45,7 +47,7 @@ After the RC is published to npm, add the scoped package to `opencode.json`:
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@xsirix/ultra-instinct@2.0.0-rc.1"]
+  "plugin": ["@xsirix/ultra-instinct@2.0.0-rc.2"]
 }
 ```
 

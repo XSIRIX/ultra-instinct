@@ -91,7 +91,7 @@
 - Produces: `validatePortablePlugin(pluginRoot: string): Promise<{ manifest: object | null, errors: string[] }>` from `validation/portable.mjs`.
 - Produces: `readSkillFrontmatter(skillFile: string): { name: string | null, description: string | null, body: string, errors: string[] }` and `validateSkillLayout(pluginRoot: string): { names: string[], errors: string[] }` from `validation/skills.mjs`.
 - Produces package scripts: `npm test`, `npm run validate`, `npm run validate:portable`, and `npm run check`.
-- Produces canonical plugin metadata: name `ultra-instinct`, version `2.0.0-rc.1`, author name `XSIRIX` with URL `https://github.com/XSIRIX`, MIT license, repository `https://github.com/XSIRIX/ultra-instinct`, and `https://agent-plugins.org/schemas/1.0.0/plugin.schema.json`; the npm package is scoped as `@xsirix/ultra-instinct`.
+- Produces canonical plugin metadata: name `ultra-instinct`, version `2.0.0-rc.2`, author name `XSIRIX` with URL `https://github.com/XSIRIX`, MIT license, repository `https://github.com/XSIRIX/ultra-instinct`, and `https://agent-plugins.org/schemas/1.0.0/plugin.schema.json`; the npm package is scoped as `@xsirix/ultra-instinct`.
 
 **References:**
 - [Agent Plugins manifest](https://github.com/agentplugins/agent-plugins-spec/blob/bd383552095128f6effe895b9257cfd580a6d179/spec/1.0.0.md#5-manifest)

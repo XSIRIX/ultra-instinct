@@ -47,10 +47,22 @@ Claude Code shows the plugin source and requested scope during installation. Rev
 
 ### Codex native runtime
 
+Codex CLI:
+
 ```bash
 codex plugin marketplace add XSIRIX/ultra-instinct
 codex plugin add ultra-instinct@ultra-instinct
 ```
+
+Codex Desktop:
+
+1. Open Plugins and install Ultra Instinct.
+2. Review and trust the declared lifecycle hooks when the app shows the hook permission.
+3. Start a new task.
+
+The `using-ultra-instinct` router skill matches every coding task, so Desktop still selects a workflow if executable hooks have not been trusted. Untrusted hooks do not provide session bootstrap, mutation tracking, or completion warnings.
+
+Current Codex documentation exposes hook review through `/hooks` in Codex CLI. If your Desktop build does not show hook review, open `/hooks` once in the CLI and trust the Ultra Instinct hooks there. Desktop and CLI use the same Codex configuration and persisted hook hashes.
 
 Remove it:
 
@@ -59,7 +71,7 @@ codex plugin remove ultra-instinct@ultra-instinct
 codex plugin marketplace remove ultra-instinct
 ```
 
-Codex may ask you to trust executable hooks. The hooks are bundled JavaScript and use a two-second timeout. Review the source and accept only the expected plugin root.
+Codex never trusts plugin hooks just because the plugin is installed. The hooks are bundled JavaScript and use a two-second timeout. Review the source and accept only the expected plugin root.
 
 ### OpenCode native runtime
 
@@ -85,7 +97,7 @@ When the RC is published to npm, add it to the `plugin` list in project or globa
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@xsirix/ultra-instinct@2.0.0-rc.1"]
+  "plugin": ["@xsirix/ultra-instinct@2.0.0-rc.2"]
 }
 ```
 
@@ -114,7 +126,7 @@ ULTRA_INSTINCT_PROFILE=strict claude
 
 ## Client capabilities
 
-| Capability | Claude Code | Codex | OpenCode |
+| Capability | Claude Code | Codex Desktop and CLI | OpenCode |
 |---|---:|---:|---:|
 | Canonical skills | Yes | Yes | Yes |
 | Session and completion hooks | Native hook files | Native hook files | JavaScript plugin events |

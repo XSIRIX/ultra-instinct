@@ -245,7 +245,7 @@ A release report records client versions, operating system, model, profile, scen
 - Hook runtime budget: 50 ms p95 in fixture tests and a hard client timeout of two seconds.
 - Network access during hook execution: none.
 - Default profile: `guided`.
-- Release candidate version: `2.0.0-rc.1`.
+- Release candidate version: `2.0.0-rc.2`.
 - Skill count in the initial v2 release: fourteen.
 - Repository license: MIT, with third-party attribution retained when code is reused.
 
