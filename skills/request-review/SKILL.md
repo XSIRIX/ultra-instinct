@@ -47,9 +47,12 @@ Read the requirements, then the diff. Read surrounding code in the repo
 wherever the diff alone doesn't give you enough context to judge.
 
 The spec and plan carry a References section with the docs and versions
-this was built against. Where the code uses an external API, check it
-against those references — and against current docs if you can reach
-them. Code written against an outdated API is a real finding.
+this was built against. Reuse them. Where code uses an external API,
+check its pinned version. If its references are missing, stale, or
+contradicted, run one bounded web search or Exa pass against official
+version-matched docs or source. Search again only if the contract
+changes. If search is unavailable, state the limit. Code written against
+an outdated API is a real finding.
 
 Assess:
 

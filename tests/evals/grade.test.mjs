@@ -33,6 +33,32 @@ test("routing passes only when the expected skill appears before the first mutat
   assert.ok(late.failureSignatures.includes("expected-skill-after-mutation"));
 });
 
+test("self-caused failures require repository grounding before another edit", () => {
+  const debugging = {
+    ...scenario,
+    id: "self-caused-failure",
+    expectedSkill: "systematic-debugging",
+    groundingExpected: true,
+  };
+  const grounded = gradeTrace(debugging, [
+    { type: "skill", skill: "systematic-debugging", action: "loaded", sequence: 1 },
+    { type: "tool", category: "read", tool: "grep", success: true, sequence: 2 },
+    { type: "tool", category: "mutation", tool: "edit", success: true, sequence: 3 },
+    { type: "tool", category: "verification", tool: "test", success: true, sequence: 4 },
+  ]);
+  const blindPatch = gradeTrace(debugging, [
+    { type: "skill", skill: "systematic-debugging", action: "loaded", sequence: 1 },
+    { type: "tool", category: "mutation", tool: "edit", success: true, sequence: 2 },
+    { type: "tool", category: "read", tool: "grep", success: true, sequence: 3 },
+    { type: "tool", category: "verification", tool: "test", success: true, sequence: 4 },
+  ]);
+
+  assert.equal(grounded.groundingPassed, true);
+  assert.equal(grounded.passed, true);
+  assert.equal(blindPatch.groundingPassed, false);
+  assert.ok(blindPatch.failureSignatures.includes("grounding-read-before-mutation-not-observed"));
+});
+
 test("negative scenarios fail on forbidden routing without requiring a mutation", () => {
   const negative = {
     ...scenario,

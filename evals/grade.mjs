@@ -5,6 +5,7 @@ function successful(trace, category) {
 export function gradeTrace(scenario, trace, artifactEvidence = null) {
   const ordered = [...trace].sort((left, right) => left.sequence - right.sequence);
   const mutations = ordered.filter((event) => event.type === "tool" && event.category === "mutation");
+  const reads = successful(ordered, "read");
   const verifications = successful(ordered, "verification");
   const firstMutation = mutations[0]?.sequence ?? Number.POSITIVE_INFINITY;
   const lastMutation = mutations.at(-1)?.sequence ?? Number.NEGATIVE_INFINITY;
@@ -17,6 +18,7 @@ export function gradeTrace(scenario, trace, artifactEvidence = null) {
     ? Boolean(expected && expected.sequence < firstMutation)
     : forbidden.length === 0;
   const mutationPassed = scenario.mutationExpected ? mutations.length > 0 : mutations.length === 0;
+  const groundingPassed = !scenario.groundingExpected || reads.some((event) => event.sequence < firstMutation);
   const verificationPassed = scenario.verificationExpected
     ? verifications.some((event) => event.sequence > lastMutation)
     : true;
@@ -49,6 +51,7 @@ export function gradeTrace(scenario, trace, artifactEvidence = null) {
     else failureSignatures.push("expected-skill-not-observed");
   }
   if (!mutationPassed) failureSignatures.push(scenario.mutationExpected ? "mutation-not-observed" : "unexpected-mutation");
+  if (!groundingPassed) failureSignatures.push("grounding-read-before-mutation-not-observed");
   if (!verificationPassed) failureSignatures.push("fresh-verification-not-observed");
   if (!strictBounded) failureSignatures.push("strict-continuation-unbounded");
   if (!compactionPassed) failureSignatures.push("compaction-bootstrap-not-restored");
@@ -63,6 +66,7 @@ export function gradeTrace(scenario, trace, artifactEvidence = null) {
     routingPassed,
     falsePositive,
     mutationPassed,
+    groundingPassed,
     verificationPassed,
     strictBounded,
     compactionPassed,

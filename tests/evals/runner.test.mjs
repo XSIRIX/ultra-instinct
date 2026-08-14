@@ -37,7 +37,7 @@ test("run plans use one canonical scenario set and stable result paths", async (
     allowClientState: false,
   }, scenarios, root);
 
-  assert.equal(scenarios.length, 10);
+  assert.equal(scenarios.length, 11);
   assert.equal(plan.length, scenarios.filter(({ profiles }) => profiles.includes("guided")).length * 2);
   assert.ok(plan.every(({ resultDirectory }) =>
     resultDirectory.startsWith(path.join(root, ".ultra-instinct/evals/guided/claude/guided")),
@@ -47,6 +47,10 @@ test("run plans use one canonical scenario set and stable result paths", async (
   assert.equal(capture.expectedSkill, "capture-artifact");
   assert.equal(capture.artifactExpectation.mode, "update-existing");
   assert.equal(capture.artifactExpectation.path, "docs/features/request-retries.md");
+
+  const selfCausedFailure = scenarios.find(({ id }) => id === "self-caused-failure");
+  assert.equal(selfCausedFailure.expectedSkill, "systematic-debugging");
+  assert.equal(selfCausedFailure.groundingExpected, true);
 
   for (const id of ["typo-only", "read-only"]) {
     assert.ok(scenarios.find((scenario) => scenario.id === id).forbiddenSkills.includes("capture-artifact"));

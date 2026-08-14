@@ -34,12 +34,12 @@ How you get there is yours. Nothing leaves a task red — a failing suite at the
 
 Library APIs move faster than training data. Before writing non-trivial code against an external library, framework, or platform API:
 
-- Read the plan's **References** for that task first — that's why they're there
+- Read and reuse the plan's **References** for that task first — that's why they're there
 - Check the version the project actually pins (`package.json`, lockfile, `Cargo.toml`, `pyproject.toml`) and read the docs *for that version*
-- Use whatever search and fetch tools you have — web search, Exa, docs-fetching skills — when the references don't cover what you hit
+- If the references are missing, stale, or contradicted, run one bounded web search or Exa pass against official docs or source for the pinned version
 - Match the codebase's existing usage of that library over anything you find externally
 
-If you discover something the plan's references got wrong or missed, add it to them. The next task benefits, and so does the reviewer.
+Reuse that research across the task. Search again only if the contract changes or a fix fails; do not repeat it for every file or test. If you discover something the plan's references got wrong or missed, add it to them. The next task benefits, and so does the reviewer.
 
 Code written against last year's API is a bug you find at runtime, not compile time.
 

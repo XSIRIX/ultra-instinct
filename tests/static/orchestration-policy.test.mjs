@@ -42,3 +42,25 @@ test("whole-work review includes committed, tracked working-tree, and untracked 
   assert.match(review, /git ls-files --others --exclude-standard -z/);
   assert.match(review, /untracked/i);
 });
+
+test("current-source research is mandatory, bounded, and reused", async () => {
+  const [debugging, tdd, execution, receivingReview, requestReview] = await Promise.all([
+    readFile(path.join(root, "skills/systematic-debugging/SKILL.md"), "utf8"),
+    readFile(path.join(root, "skills/tdd/SKILL.md"), "utf8"),
+    readFile(path.join(root, "skills/execute-plan/SKILL.md"), "utf8"),
+    readFile(path.join(root, "skills/receiving-code-review/SKILL.md"), "utf8"),
+    readFile(path.join(root, "skills/request-review/SKILL.md"), "utf8"),
+  ]);
+
+  assert.match(debugging, /before any edit/i);
+  assert.match(debugging, /web search or Exa/i);
+  assert.match(debugging, /one to three authoritative sources/i);
+  assert.match(debugging, /search again only if the hypothesis changes or a fix fails/i);
+  assert.match(debugging, /purely internal logic/i);
+
+  for (const skill of [tdd, execution, receivingReview, requestReview]) {
+    assert.match(skill, /reuse/i);
+    assert.match(skill, /web search or Exa/i);
+    assert.match(skill, /pinned version/i);
+  }
+});

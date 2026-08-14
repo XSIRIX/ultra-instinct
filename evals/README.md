@@ -1,6 +1,6 @@
 # Cross-client evaluations
 
-The eval suite asks Claude Code, Codex, and OpenCode to perform ten small scenarios. It records only normalized facts. Raw prompts and model output are never written to results.
+The eval suite asks Claude Code, Codex, and OpenCode to perform eleven small scenarios. It records only normalized facts. Raw prompts and model output are never written to results.
 
 ## Free deterministic checks
 
