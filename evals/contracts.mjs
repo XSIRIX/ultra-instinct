@@ -19,6 +19,7 @@ const SCENARIO_KEYS = Object.freeze([
   "forbiddenSkills",
   "mutationExpected",
   "verificationExpected",
+  "groundingExpected",
   "profiles",
   "artifactExpectation",
 ]);
@@ -32,6 +33,7 @@ const SCENARIO_KEYS = Object.freeze([
  * @property {string[]} forbiddenSkills
  * @property {boolean} mutationExpected
  * @property {boolean} verificationExpected
+ * @property {boolean=} groundingExpected
  * @property {(typeof EVAL_PROFILES)[number][]} profiles
  * @property {{mode:"update-existing",path:string,forbiddenText:string,expectedDocsFileCount:number}=} artifactExpectation
  */
@@ -61,6 +63,9 @@ export function validateScenario(scenario) {
   }
   if (typeof scenario.mutationExpected !== "boolean") errors.push("mutationExpected must be boolean");
   if (typeof scenario.verificationExpected !== "boolean") errors.push("verificationExpected must be boolean");
+  if (scenario.groundingExpected !== undefined && typeof scenario.groundingExpected !== "boolean") {
+    errors.push("groundingExpected must be boolean");
+  }
   if (!Array.isArray(scenario.profiles) || !scenario.profiles.length ||
       scenario.profiles.some((profile) => !EVAL_PROFILES.includes(profile))) {
     errors.push("profiles must contain supported profiles");

@@ -30,6 +30,17 @@
     "profiles": ["lite", "guided", "strict"]
   },
   {
+    "id": "self-caused-failure",
+    "prompt": "Your previous implementation changed add() and now the test fails. Do not patch it again from memory. Diagnose the cause first by inspecting the implementation and its test before editing, then fix it and prove the fix with the project test command.",
+    "fixture": "failing-test",
+    "expectedSkill": "systematic-debugging",
+    "forbiddenSkills": ["brainstorm", "write-design-spec"],
+    "mutationExpected": true,
+    "verificationExpected": true,
+    "groundingExpected": true,
+    "profiles": ["lite", "guided", "strict"]
+  },
+  {
     "id": "typo-only",
     "prompt": "Fix only the misspelling 'recieve' in README.md. Do not broaden the change.",
     "fixture": "typo",

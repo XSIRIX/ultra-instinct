@@ -9,6 +9,17 @@ Write the test. Watch it fail. Write the code that makes it pass.
 
 **Why the failure matters:** a test you never watched fail hasn't proven it can catch anything. It might assert on the wrong thing, test a mock instead of your code, or pass for a reason you didn't intend. Red is the proof.
 
+## Ground the contract
+
+Direct entry into TDD must not bypass current evidence. Before production code touches a library, framework, platform API, or unfamiliar error:
+
+- Search the repository for its established pattern.
+- Check the pinned version.
+- Reuse current references from debugging, the spec, or the plan.
+- If those references are missing, stale, or contradicted, run one bounded web search or Exa pass against official version-matched docs or source.
+
+Purely internal behavior needs no web search. Search again only when the contract changes or a fix fails; then return to `systematic-debugging` rather than stacking fixes.
+
 ## The cycle
 
 **Red** — one test, one behavior, a name that says what should happen, real code over mocks.
