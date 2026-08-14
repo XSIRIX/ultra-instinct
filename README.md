@@ -102,9 +102,12 @@ Claude Code and OpenCode also expose workflow commands plus reviewer and debugge
 
 ```bash
 npm install
+npm run sync:codex
 npm run check
 npm run eval -- --dry-run --client all --profile guided --repeat 5 --label guided
 ```
+
+Run `npm run sync:codex` after changing the shared adapters, hooks, runtime, or skills. Validation rejects a stale Codex package copy.
 
 Deterministic checks are free and local. Live evaluations call paid models and require separate operator consent. See [evals/README.md](evals/README.md).
 

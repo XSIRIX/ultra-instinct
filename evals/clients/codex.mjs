@@ -10,6 +10,10 @@ function commandVersion() {
   return result.status === 0 ? result.stdout.trim().slice(0, 120) : "unknown";
 }
 
+export function codexCapabilityRoot(pluginRoot) {
+  return path.join(pluginRoot, "packages/codex");
+}
+
 export async function runScenario({ scenario, profile, pluginRoot, workspace, model }) {
   const child = spawn("codex", ["app-server", "--stdio"], {
     cwd: workspace,
@@ -85,7 +89,7 @@ export async function runScenario({ scenario, profile, pluginRoot, workspace, mo
       ephemeral: true,
       selectedCapabilityRoots: [{
         id: "ultra-instinct",
-        location: { type: "environment", environmentId: "local", path: pluginRoot },
+        location: { type: "environment", environmentId: "local", path: codexCapabilityRoot(pluginRoot) },
       }],
       experimentalRawEvents: true,
     });

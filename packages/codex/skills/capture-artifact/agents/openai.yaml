@@ -1,0 +1,4 @@
+interface:
+  display_name: "Capture Artifact"
+  short_description: "Capture completed work as durable project docs"
+  default_prompt: "Use $capture-artifact to turn this completed workflow into a durable project documentation artifact."

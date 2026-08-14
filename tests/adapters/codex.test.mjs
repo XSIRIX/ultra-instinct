@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -68,4 +68,25 @@ test("shared dispatcher selects Codex and bounds strict continuation", async () 
   const second = await dispatchHook({ stdin: JSON.stringify(await fixture("stop")), env });
   assert.equal(JSON.parse(first.stdout).decision, "block");
   assert.notEqual(JSON.parse(second.stdout).decision, "block");
+});
+
+test("shared dispatcher recognizes model-free Codex SessionEnd and removes state", async () => {
+  const stateDir = mkdtempSync(path.join(os.tmpdir(), "ultra-codex-end-"));
+  const env = {
+    PLUGIN_ROOT: pluginRoot,
+    CLAUDE_PLUGIN_ROOT: pluginRoot,
+    ULTRA_INSTINCT_PROFILE: "strict",
+    ULTRA_INSTINCT_STATE_DIR: stateDir,
+  };
+  const mutation = {
+    ...(await fixture("pre-apply-patch")),
+    hook_event_name: "PostToolUse",
+    tool_response: { success: true },
+  };
+
+  await dispatchHook({ stdin: JSON.stringify(mutation), env });
+  assert.equal(readdirSync(stateDir).filter((name) => name.endsWith(".json")).length, 1);
+
+  await dispatchHook({ stdin: JSON.stringify(await fixture("session-end")), env });
+  assert.equal(readdirSync(stateDir).filter((name) => name.endsWith(".json")).length, 0);
 });

@@ -10,6 +10,14 @@ import {
   createRunPlan,
   parseArgs,
 } from "../../evals/run.mjs";
+import { codexCapabilityRoot } from "../../evals/clients/codex.mjs";
+
+test("Codex live eval injects the dedicated hook-capable package root", () => {
+  assert.equal(
+    codexCapabilityRoot("/opt/ultra-instinct"),
+    "/opt/ultra-instinct/packages/codex",
+  );
+});
 
 test("runner parses a reproducible matrix and refuses stateful live clients by default", () => {
   const options = parseArgs([

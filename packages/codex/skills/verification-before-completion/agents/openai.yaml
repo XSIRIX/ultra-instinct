@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Before Completion"
+  short_description: "Prove work with fresh verification evidence"
+  default_prompt: "Verify this work with fresh evidence before claiming completion."
