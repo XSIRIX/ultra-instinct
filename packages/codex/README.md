@@ -7,3 +7,5 @@ The manifest in `.codex-plugin/` is maintained here. The adapters, hooks, runtim
 ```bash
 npm run sync:codex
 ```
+
+Codex registers `SessionStart` only. This injects the workflow router at startup, resume, clear, and compact. Mutation tracking and completion gates stay disabled because current local-command `PostToolUse` payloads do not include a trustworthy exit status.

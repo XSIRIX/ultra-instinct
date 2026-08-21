@@ -8,13 +8,6 @@ const STAGES = Object.freeze({
   SessionEnd: "session.end",
 });
 
-function shellExitCode(response) {
-  for (const value of [response?.exit_code, response?.exitCode]) {
-    if (Number.isInteger(value)) return value;
-  }
-  return null;
-}
-
 export function normalizeCodexEvent(input, env = {}) {
   const eventName = input?.hook_event_name;
   const stage = eventName === "SessionStart" && ["clear", "compact"].includes(input.source)
@@ -37,8 +30,8 @@ export function normalizeCodexEvent(input, env = {}) {
     event.tool = {
       name: toolName,
       input: isShell ? { command: input.tool_input?.command } : null,
-      success: eventName === "PostToolUse"
-        && (!isShell || shellExitCode(input.tool_response) === 0),
+      // Codex exposes model-facing shell output here, not a process exit status.
+      success: eventName === "PostToolUse" && !isShell,
     };
   }
   if (eventName === "Stop") event.stopHookActive = input.stop_hook_active === true;

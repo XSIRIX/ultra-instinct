@@ -24,6 +24,22 @@ test("Codex installs from a dedicated legacy package root so hooks are discovera
   assert.equal(existsSync(path.join(codexRoot, "skills/using-ultra-instinct/SKILL.md")), true);
 });
 
+test("Codex package registers only reliable SessionStart bootstrap hooks", () => {
+  const canonical = JSON.parse(readFileSync(path.join(pluginRoot, "hooks/hooks.codex.json"), "utf8"));
+  const generated = JSON.parse(readFileSync(path.join(pluginRoot, "packages/codex/hooks/hooks.json"), "utf8"));
+  assert.deepEqual(generated, canonical);
+  assert.deepEqual(Object.keys(generated.hooks), ["SessionStart"]);
+  const [group] = generated.hooks.SessionStart;
+  assert.equal(group.matcher, "startup|resume|clear|compact");
+  assert.equal(group.hooks[0].command, "node \"${CLAUDE_PLUGIN_ROOT}/hooks/dispatch.mjs\"");
+  assert.equal(group.hooks[0].timeout, 2);
+});
+
+test("Codex package does not advertise mutation tracking without a success signal", () => {
+  const manifest = JSON.parse(readFileSync(path.join(pluginRoot, "packages/codex/.codex-plugin/plugin.json"), "utf8"));
+  assert.doesNotMatch(manifest.interface.longDescription, /track.+mutation|verification facts/i);
+});
+
 test("Codex marketplace exposes explicit install and authentication policies", () => {
   const marketplace = JSON.parse(readFileSync(path.join(pluginRoot, ".agents/plugins/marketplace.json"), "utf8"));
   const [entry] = marketplace.plugins;

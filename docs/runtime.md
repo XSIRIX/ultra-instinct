@@ -60,7 +60,7 @@ Codex Desktop:
 2. Review and trust the declared lifecycle hooks when the app shows the hook permission.
 3. Start a new task.
 
-The `using-ultra-instinct` router skill matches every coding task, so Desktop still selects a workflow if executable hooks have not been trusted. Untrusted hooks do not provide session bootstrap, mutation tracking, or completion warnings.
+The `using-ultra-instinct` router skill matches every coding task, so Desktop still selects a workflow if executable hooks have not been trusted. Codex registers `SessionStart` bootstrap only; untrusted hooks remove that bootstrap and compact recovery.
 
 Current Codex documentation exposes hook review through `/hooks` in Codex CLI. If your Desktop build does not show hook review, open `/hooks` once in the CLI and trust the Ultra Instinct hooks there. Desktop and CLI use the same Codex configuration and persisted hook hashes.
 
@@ -118,23 +118,25 @@ ULTRA_INSTINCT_PROFILE=strict claude
 | Native skills | Yes | Yes | Yes |
 | Session routing bootstrap | No | Yes | Yes |
 | Compaction recovery | No | Yes | Yes |
-| Mutation and verification facts | No | Yes | Yes |
-| Unverified completion warning | No | Yes | Yes |
-| Completion continuation | No | No | Once per mutation cycle |
+| Mutation and verification facts | No | Claude/OpenCode | Claude/OpenCode |
+| Unverified completion warning | No | Claude/OpenCode | Claude/OpenCode |
+| Completion continuation | No | No | Claude/OpenCode, once per mutation cycle |
 
 `guided` never denies an action. `strict` may ask the agent to continue once when a change has no fresh recognized verification. A second completion attempt is allowed, so the hook cannot loop forever. Direct user instructions remain higher priority in every profile.
+
+Codex uses `SessionStart` only for the router bootstrap and compact recovery. Codex does not track mutation or verification facts and does not run completion warnings or strict continuation. Its current `PostToolUse.tool_response` for local commands is model-facing output, not trustworthy process status.
 
 ## Client capabilities
 
 | Capability | Claude Code | Codex Desktop and CLI | OpenCode |
 |---|---:|---:|---:|
 | Canonical skills | Yes | Yes | Yes |
-| Session and completion hooks | Native hook files | Native hook files | JavaScript plugin events |
+| Registered lifecycle hooks | `SessionStart`, `PostToolUse`, `Stop`, `SessionEnd` | `SessionStart` only | JavaScript plugin events |
 | Compaction recovery | Compact `SessionStart` | Compaction lifecycle | Compaction context hook |
 | Workflow commands | Seven native commands | Use skills directly | Seven registered commands |
 | Reviewer/debugger agents | Native agents | Use skills directly | Registered subagents |
 
-All adapters call the same code in `runtime/`. They only translate client events and responses.
+Registered adapters call the same code in `runtime/` for the events each client can support reliably. They only translate client events and responses.
 
 ## Design workflow
 
@@ -144,7 +146,7 @@ Inside a project, grilling keeps its resumable working record under ignored `.ul
 
 ## Privacy and safety
 
-The runtime never stores prompts, transcripts, source text, filenames, tool arguments, tool output, environment values, or credentials.
+The runtime never stores prompts, transcripts, source text, filenames, tool arguments, tool output, environment values, or credentials. Codex writes no workflow state because it registers bootstrap hooks only.
 
 It stores only:
 
@@ -162,7 +164,7 @@ Hooks do not make network requests. They do not install dependencies, edit proje
 The initial contract was checked on macOS with:
 
 - Claude Code 2.1.227 or newer;
-- Codex CLI 0.147.0 or newer;
+- Codex CLI 0.148.0-alpha.15;
 - OpenCode 1.18.15 or newer;
 - Node.js 20 or newer;
 - Bun 1.3 or newer.

@@ -16,5 +16,7 @@ for (const adapter of ["claude.mjs", "codex.mjs"]) {
 for (const directory of ["hooks", "runtime", "skills"]) {
   cpSync(path.join(pluginRoot, directory), path.join(codexRoot, directory), { recursive: true });
 }
+cpSync(path.join(pluginRoot, "hooks/hooks.codex.json"), path.join(codexRoot, "hooks/hooks.json"));
+rmSync(path.join(codexRoot, "hooks/hooks.codex.json"));
 
 process.stdout.write(`Synced Codex package at ${codexRoot}\n`);

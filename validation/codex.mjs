@@ -53,7 +53,8 @@ export function validateCodexPackage(pluginRoot) {
   const mappings = [
     ["adapters/claude.mjs", "adapters/claude.mjs"],
     ["adapters/codex.mjs", "adapters/codex.mjs"],
-    ["hooks", "hooks"],
+    ["hooks/dispatch.mjs", "hooks/dispatch.mjs"],
+    ["hooks/hooks.codex.json", "hooks/hooks.json"],
     ["runtime", "runtime"],
     ["skills", "skills"],
   ];
@@ -61,6 +62,9 @@ export function validateCodexPackage(pluginRoot) {
     if (!treesMatch(path.join(pluginRoot, source), path.join(codexRoot, target))) {
       errors.push(`Codex package copy is stale: ${target}`);
     }
+  }
+  if (existsSync(path.join(codexRoot, "hooks/hooks.codex.json"))) {
+    errors.push("Codex package must expose its client config only as hooks/hooks.json");
   }
   return { errors };
 }

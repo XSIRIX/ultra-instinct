@@ -13,7 +13,7 @@
   "interface": {
     "displayName": "Ultra Instinct",
     "shortDescription": "Reliable coding workflow guidance.",
-    "longDescription": "Ultra Instinct routes coding work into focused skills and tracks only mutation and verification facts.",
+    "longDescription": "Ultra Instinct routes coding work into focused skills and restores that routing after compaction.",
     "developerName": "XSIRIX",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],

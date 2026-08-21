@@ -16,7 +16,7 @@ Install globally with `-g`, or install one skill with `--skill tdd`.
 
 ### Native runtime
 
-This adds session routing, compaction recovery, mutation tracking, and verification guidance. The default profile is `guided`.
+This adds session routing and compaction recovery. Claude Code and OpenCode also add mutation tracking and verification guidance. The default profile is `guided`.
 
 Claude Code:
 
@@ -32,7 +32,7 @@ codex plugin marketplace add XSIRIX/ultra-instinct
 codex plugin add ultra-instinct@ultra-instinct
 ```
 
-Codex Desktop: install Ultra Instinct from the Plugins screen, then start a new task. The router skill applies to every coding task, so workflow selection still works before executable hooks are trusted. The plugin declares its hooks explicitly so supported Desktop builds can show their review step. If your Desktop build does not show hook review yet, open `/hooks` once in Codex CLI; Codex Desktop and CLI share the persisted trust state.
+Codex Desktop: install Ultra Instinct from the Plugins screen, then start a new task. The router skill applies to every coding task, so workflow selection still works before executable hooks are trusted. The plugin declares a `SessionStart` bootstrap hook only. If your Desktop build does not show hook review yet, open `/hooks` once in Codex CLI; Codex Desktop and CLI share the persisted trust state.
 
 OpenCode can load the source checkout directly. Clone it under your project, then link its entry point:
 
@@ -69,6 +69,8 @@ ULTRA_INSTINCT_PROFILE=strict claude
 
 Invalid or missing values fall back to `guided`; invalid values emit a short warning.
 
+On Codex, `guided` and `strict` currently provide the same bootstrap and compaction recovery. Codex does not expose a trustworthy command-success field to hooks, so Ultra Instinct does not track mutation or verification facts or run a completion gate there.
+
 ## Skills
 
 | Need | Skill |
@@ -95,7 +97,7 @@ Claude Code and OpenCode also expose workflow commands plus reviewer and debugge
 - User and repository instructions always win.
 - Hooks do not use the network, install packages, edit project source files, call a model, or run checks.
 - Local drafts, runtime facts, and eval output stay under ignored `.ultra-instinct/`.
-- State contains only mutation and verification facts. It never stores prompts, transcripts, source, filenames, tool arguments, output, environment values, or credentials.
+- On Claude Code and OpenCode, state contains only mutation and verification facts. Codex writes no workflow state. No client stores prompts, transcripts, source, filenames, tool arguments, output, environment values, or credentials.
 - Runtime failures allow the client action and emit a short warning.
 - There are zero production dependencies and no postinstall script.
 

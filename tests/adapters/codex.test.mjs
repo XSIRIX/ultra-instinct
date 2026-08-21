@@ -1,7 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
@@ -13,13 +11,10 @@ async function fixture(name) {
   return JSON.parse(await readFile(path.join(import.meta.dirname, `../fixtures/codex/${name}.json`), "utf8"));
 }
 
-test("normalizes recorded Codex lifecycle fixtures without transcript or model content", async () => {
+test("normalizes current Codex fixtures without transcript or model content", async () => {
   const cases = [
     ["session-start", "session.start"],
-    ["pre-apply-patch", "tool.before"],
-    ["post-bash-success", "tool.after"],
-    ["stop", "session.completing"],
-    ["session-end", "session.end"],
+    ["post-bash-output", "tool.after"],
   ];
   for (const [name, stage] of cases) {
     const event = normalizeCodexEvent(await fixture(name), { ULTRA_INSTINCT_PROFILE: "guided" });
@@ -29,64 +24,30 @@ test("normalizes recorded Codex lifecycle fixtures without transcript or model c
   }
 });
 
-test("trusts shell verification only when Codex reports exit code zero", async () => {
-  const input = await fixture("post-bash-success");
-  assert.equal(normalizeCodexEvent(input, {}).tool.success, true);
+test("never treats Codex model-facing Bash output as confirmed command success", async () => {
+  const input = await fixture("post-bash-output");
+  assert.equal(normalizeCodexEvent(input, {}).tool.success, false);
   assert.equal(normalizeCodexEvent({
     ...input,
-    tool_response: { exit_code: 2, output: "private failure" },
+    tool_response: { exit_code: 0, output: "unsupported invented shape" },
   }, {}).tool.success, false);
-  assert.equal(normalizeCodexEvent({ ...input, tool_response: {} }, {}).tool.success, false);
 });
 
-test("encodes Codex additional context and strict Stop continuation", () => {
+test("encodes Codex SessionStart additional context", () => {
   assert.equal(
     encodeCodexDecision("SessionStart", { allow: true, context: bootstrap.context, warning: null, continueSession: false })
       .hookSpecificOutput.additionalContext,
     bootstrap.context,
   );
-  assert.deepEqual(
-    encodeCodexDecision("Stop", { allow: false, context: "verify", warning: null, continueSession: true }),
-    { decision: "block", reason: "verify" },
-  );
 });
 
-test("shared dispatcher selects Codex and bounds strict continuation", async () => {
+test("generated Codex SessionStart entrypoint injects the canonical bootstrap", async () => {
   const env = {
     PLUGIN_ROOT: pluginRoot,
     CLAUDE_PLUGIN_ROOT: pluginRoot,
-    ULTRA_INSTINCT_PROFILE: "strict",
-    ULTRA_INSTINCT_STATE_DIR: mkdtempSync(path.join(os.tmpdir(), "ultra-codex-")),
+    ULTRA_INSTINCT_PROFILE: "guided",
   };
-  const mutation = {
-    ...(await fixture("pre-apply-patch")),
-    hook_event_name: "PostToolUse",
-    tool_response: { success: true },
-  };
-  await dispatchHook({ stdin: JSON.stringify(mutation), env });
-  const first = await dispatchHook({ stdin: JSON.stringify(await fixture("stop")), env });
-  const second = await dispatchHook({ stdin: JSON.stringify(await fixture("stop")), env });
-  assert.equal(JSON.parse(first.stdout).decision, "block");
-  assert.notEqual(JSON.parse(second.stdout).decision, "block");
-});
-
-test("shared dispatcher recognizes model-free Codex SessionEnd and removes state", async () => {
-  const stateDir = mkdtempSync(path.join(os.tmpdir(), "ultra-codex-end-"));
-  const env = {
-    PLUGIN_ROOT: pluginRoot,
-    CLAUDE_PLUGIN_ROOT: pluginRoot,
-    ULTRA_INSTINCT_PROFILE: "strict",
-    ULTRA_INSTINCT_STATE_DIR: stateDir,
-  };
-  const mutation = {
-    ...(await fixture("pre-apply-patch")),
-    hook_event_name: "PostToolUse",
-    tool_response: { success: true },
-  };
-
-  await dispatchHook({ stdin: JSON.stringify(mutation), env });
-  assert.equal(readdirSync(stateDir).filter((name) => name.endsWith(".json")).length, 1);
-
-  await dispatchHook({ stdin: JSON.stringify(await fixture("session-end")), env });
-  assert.equal(readdirSync(stateDir).filter((name) => name.endsWith(".json")).length, 0);
+  const result = await dispatchHook({ stdin: JSON.stringify(await fixture("session-start")), env });
+  assert.equal(result.exitCode, 0);
+  assert.match(JSON.parse(result.stdout).hookSpecificOutput.additionalContext, /ultra-instinct:bootstrap:v2/);
 });

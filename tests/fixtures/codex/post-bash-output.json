@@ -8,8 +8,5 @@
   "tool_input": {
     "command": "npm run check"
   },
-  "tool_response": {
-    "exit_code": 0,
-    "output": "private output"
-  }
+  "tool_response": "Chunk ID: private\nProcess exited with code 0\nFinal output:\nprivate output"
 }
