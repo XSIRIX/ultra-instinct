@@ -6,9 +6,9 @@ import test from "node:test";
 import { SURFACES } from "../../runtime/surfaces.mjs";
 import { pluginRoot } from "../helpers/runtime.mjs";
 
-test("canonical surfaces expose six commands and two specialist agents", () => {
+test("canonical surfaces expose seven commands and two specialist agents", () => {
   assert.deepEqual(SURFACES.commands.map(({ name }) => name), [
-    "brainstorm", "design-spec", "plan", "execute", "verify", "finish",
+    "brainstorm", "grilling", "design-spec", "plan", "execute", "verify", "finish",
   ]);
   assert.deepEqual(SURFACES.agents.map(({ name }) => name), ["reviewer", "debugger"]);
 });

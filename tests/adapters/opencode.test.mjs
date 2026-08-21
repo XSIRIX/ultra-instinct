@@ -45,7 +45,9 @@ test("registers the canonical skill path, commands, and agents exactly once", ()
   registerOpenCodeConfig(config, pluginRoot);
 
   assert.equal(config.skills.paths.filter((entry) => entry === path.join(pluginRoot, "skills")).length, 1);
-  assert.deepEqual(Object.keys(config.command), ["brainstorm", "design-spec", "plan", "execute", "verify", "finish"]);
+  assert.deepEqual(Object.keys(config.command), [
+    "brainstorm", "grilling", "design-spec", "plan", "execute", "verify", "finish",
+  ]);
   assert.deepEqual(Object.keys(config.agent), ["reviewer", "debugger"]);
   assert.equal(config.agent.reviewer.mode, "subagent");
   assert.equal(config.agent.reviewer.permission.edit, "deny");

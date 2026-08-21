@@ -1,6 +1,7 @@
 export const SURFACES = Object.freeze({
   commands: Object.freeze([
     { name: "brainstorm", skill: "brainstorm", description: "Clarify an unsettled idea or approach" },
+    { name: "grilling", skill: "grilling", description: "Pressure-test a proposed design" },
     { name: "design-spec", skill: "write-design-spec", description: "Capture an agreed design" },
     { name: "plan", skill: "write-plan", description: "Turn requirements into build tasks" },
     { name: "execute", skill: "execute-plan", description: "Implement an approved plan" },

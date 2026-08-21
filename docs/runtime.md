@@ -9,7 +9,7 @@ Ultra Instinct has two modes:
 
 ### Skills-only
 
-Install all fourteen skills in the current project:
+Install all fifteen skills in the current project:
 
 ```bash
 npx skills add xsirix/ultra-instinct
@@ -131,10 +131,16 @@ ULTRA_INSTINCT_PROFILE=strict claude
 | Canonical skills | Yes | Yes | Yes |
 | Session and completion hooks | Native hook files | Native hook files | JavaScript plugin events |
 | Compaction recovery | Compact `SessionStart` | Compaction lifecycle | Compaction context hook |
-| Workflow commands | Six native commands | Use skills directly | Six registered commands |
+| Workflow commands | Seven native commands | Use skills directly | Seven registered commands |
 | Reviewer/debugger agents | Native agents | Use skills directly | Registered subagents |
 
 All adapters call the same code in `runtime/`. They only translate client events and responses.
+
+## Design workflow
+
+Use `brainstorm` to find a direction, then `grilling` to pressure-test its open choices and failure cases. Only after the user explicitly confirms the empty decision frontier does `write-design-spec` turn that understanding into a build contract.
+
+Inside a project, grilling keeps its resumable working record under ignored `.ultra-instinct/grills/`. Outside a project, it stays in conversation and writes no file.
 
 ## Privacy and safety
 

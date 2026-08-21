@@ -33,6 +33,13 @@ test("assistant announcements and explicit Skill calls are observed", () => {
   }, { client: "claude", events: loaded });
   assert.equal(loaded.find((event) => event.type === "skill")?.skill, "systematic-debugging");
   assert.equal(loaded.find((event) => event.type === "skill")?.action, "loaded");
+
+  const grilling = [];
+  normalizeNativeEvent({
+    type: "assistant",
+    message: { content: [{ type: "text", text: "I am using the grilling skill first." }] },
+  }, { client: "codex", events: grilling });
+  assert.equal(grilling.find((event) => event.type === "skill")?.skill, "grilling");
 });
 
 test("verification counts only after native completion and sanitizer drops private fields", () => {

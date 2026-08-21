@@ -1,6 +1,6 @@
 # Ultra Instinct
 
-Ultra Instinct helps coding agents choose the right workflow before they act. It keeps one set of fourteen skills and adds a small, shared runtime for Claude Code, Codex, and OpenCode.
+Ultra Instinct helps coding agents choose the right workflow before they act. It keeps one set of fifteen skills and adds a small, shared runtime for Claude Code, Codex, and OpenCode.
 
 ## Choose an install
 
@@ -75,6 +75,7 @@ Invalid or missing values fall back to `guided`; invalid values emit a short war
 |---|---|
 | Pick an approach | `brainstorm` |
 | Compare visual options | `mockup` |
+| Pressure-test a proposed design | `grilling` |
 | Record an agreed design | `write-design-spec` |
 | Turn a spec into tasks | `write-plan` |
 | Isolate committed work | `isolate-work` |

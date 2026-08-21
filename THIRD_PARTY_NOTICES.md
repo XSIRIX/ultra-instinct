@@ -11,3 +11,9 @@ Copyright 2026 Agent Plugins contributors. Licensed under the Apache License 2.0
 The `systematic-debugging`, `verification-before-completion`, and `receiving-code-review` skills were adapted from workflow ideas in Superpowers at commit `44c9b2d6e889982ac18c27d05a19fefe335194e1`.
 
 Copyright Jesse Vincent and Superpowers contributors. Licensed under the MIT License.
+
+## Grilling workflow reference
+
+The `grilling` skill was adapted from workflow ideas in Matt Pocock's `grilling`, `grill-me`, and `grill-with-docs` skills at commit `0ab1b63a410a03d3627979a109c8695de27af954`.
+
+Copyright Matt Pocock and contributors. Licensed under the MIT License.

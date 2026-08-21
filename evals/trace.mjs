@@ -4,6 +4,7 @@ export const SKILL_NAMES = Object.freeze([
   "brainstorm",
   "execute-plan",
   "finish-branch",
+  "grilling",
   "isolate-work",
   "mockup",
   "receiving-code-review",

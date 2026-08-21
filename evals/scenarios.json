@@ -10,6 +10,16 @@
     "profiles": ["lite", "guided", "strict"]
   },
   {
+    "id": "design-grilling",
+    "prompt": "I have chosen a file-backed job queue with one worker and at-least-once delivery. Pressure-test this proposed design and its failure cases. Research what the project can answer, recommend an answer for each open choice, and stop before writing a spec or editing files until I explicitly confirm the shared design.",
+    "fixture": "node-package",
+    "expectedSkill": "grilling",
+    "forbiddenSkills": ["brainstorm", "write-design-spec", "execute-plan", "tdd"],
+    "mutationExpected": false,
+    "verificationExpected": false,
+    "profiles": ["lite", "guided", "strict"]
+  },
+  {
     "id": "small-change-tdd",
     "prompt": "Add a greet(name) function that returns 'Hello, <name>!'. Use the project's test command and finish the change.",
     "fixture": "node-package",
