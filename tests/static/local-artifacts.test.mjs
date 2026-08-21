@@ -40,6 +40,9 @@ test("generated artifacts default to one ignored local workspace", async () => {
   assert.match(grilling, /create no file|do not create a file/i);
   assert.match(grilling, /do not (?:silently |automatically )?(?:edit|write|change).+CONTEXT\.md/is);
   assert.match(grilling, /ADR/i);
+  assert.match(grilling, /git check-ignore/);
+  assert.match(grilling, /append.+\/grills\//is);
+  assert.match(grilling, /cannot (?:prove|verify).+ignored.+(?:create no file|stay in conversation)/is);
   assert.match(isolation, /ignored specs and plans do not require isolation/i);
   assert.match(evalGuide, /\.ultra-instinct\/evals\/<label>/);
   assert.match(harborGuide, /\.ultra-instinct\/harbor\/smoke-001/);

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 
 import { normalizeCodexEvent, encodeCodexDecision } from "../../adapters/codex.mjs";
-import { dispatchHook } from "../../hooks/dispatch.mjs";
 import { bootstrap, pluginRoot } from "../helpers/runtime.mjs";
 
 async function fixture(name) {
@@ -41,13 +41,24 @@ test("encodes Codex SessionStart additional context", () => {
   );
 });
 
-test("generated Codex SessionStart entrypoint injects the canonical bootstrap", async () => {
-  const env = {
-    PLUGIN_ROOT: pluginRoot,
-    CLAUDE_PLUGIN_ROOT: pluginRoot,
-    ULTRA_INSTINCT_PROFILE: "guided",
-  };
-  const result = await dispatchHook({ stdin: JSON.stringify(await fixture("session-start")), env });
-  assert.equal(result.exitCode, 0);
-  assert.match(JSON.parse(result.stdout).hookSpecificOutput.additionalContext, /ultra-instinct:bootstrap:v2/);
+test("generated Codex hook process injects bootstrap for every registered source", async () => {
+  const generatedRoot = path.join(pluginRoot, "packages/codex");
+  const entrypoint = path.join(generatedRoot, "hooks/dispatch.mjs");
+  const input = await fixture("session-start");
+
+  for (const source of ["startup", "resume", "clear", "compact"]) {
+    const result = spawnSync(process.execPath, [entrypoint], {
+      input: JSON.stringify({ ...input, source }),
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        PLUGIN_ROOT: generatedRoot,
+        CLAUDE_PLUGIN_ROOT: generatedRoot,
+        ULTRA_INSTINCT_PROFILE: "guided",
+      },
+      timeout: 5_000,
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(JSON.parse(result.stdout).hookSpecificOutput.additionalContext, /ultra-instinct:bootstrap:v2/);
+  }
 });

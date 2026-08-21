@@ -137,3 +137,33 @@ test("default runtime state stays inside the ignored workspace artifact director
     rmSync(workspace, { recursive: true, force: true });
   }
 });
+
+test("Codex bootstrap ignores and removes legacy runtime state", async () => {
+  let reads = 0;
+  let writes = 0;
+  let deletes = 0;
+  const stateStore = {
+    read() {
+      reads += 1;
+      return {
+        ...createInitialState(),
+        mutationEpoch: 1,
+        lastMutationAt: 1_000,
+      };
+    },
+    write() { writes += 1; },
+    delete() { deletes += 1; },
+    cleanup() {},
+  };
+
+  const decision = await handleRuntimeEvent(runtimeEvent({
+    client: "codex",
+    stage: "context.compacting",
+  }), { bootstrap: { context: "router" }, stateStore });
+
+  assert.equal(reads, 0);
+  assert.equal(writes, 0);
+  assert.equal(deletes, 1);
+  assert.equal(decision.context, "router");
+  assert.doesNotMatch(decision.context, /mutation|verification/i);
+});

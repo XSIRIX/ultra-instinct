@@ -25,7 +25,9 @@ After the first material decision, create or resume:
 
 `.ultra-instinct/grills/YYYY-MM-DD/<topic>.md`
 
-Ensure `.ultra-instinct/.gitignore` contains `*` when it does not already exist. Never overwrite an existing inner ignore file.
+Before writing the brief, prove its target path is ignored. In Git, run `git check-ignore -q .ultra-instinct/grills/YYYY-MM-DD/<topic>.md`. If `.ultra-instinct/.gitignore` does not exist, create it with `*`. If it exists but the grill path is not ignored, append `/grills/` without replacing any existing line. Run `git check-ignore` again before writing.
+
+If there is no active version-control ignore mechanism, or you cannot prove the grill path is ignored, stay in conversation and create no file. Never risk turning private working notes into a tracked change.
 
 Update the brief after every round. Preserve:
 

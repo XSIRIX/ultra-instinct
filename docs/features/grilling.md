@@ -22,15 +22,16 @@ The build flow is:
 - A grill ends only when its material frontier is empty and the user explicitly confirms the shared design.
 - Grilling never silently changes tracked `CONTEXT.md`, ADRs, or product documentation.
 - Codex registers `SessionStart` only. Current local-command `PostToolUse.tool_response` is model-facing text without a trustworthy exit status, so Codex does not track mutation or verification facts or run completion gates.
+- Codex bootstrap ignores state and removes any current-session state left by an older rich-hook installation.
 - Claude Code and OpenCode retain mutation tracking and bounded verification guidance because their tested event contracts provide a reliable success signal.
 
 ## Verification
 
-- `npm run check`: 120 tests passed and all package validators passed.
+- `npm run check`: 121 tests passed and all package validators passed.
 - `git diff --check`: passed.
 - `npm pack --json --dry-run --silent`: succeeded with 86 package entries.
 - Codex adapter coverage uses the current plain-string Bash response shape and proves it is not accepted as successful verification.
-- Generated Codex package coverage proves its only registered hook is `SessionStart` for `startup|resume|clear|compact`.
+- Generated Codex package coverage executes the packaged hook process and proves its only registered hook is `SessionStart` for `startup|resume|clear|compact`.
 
 ## Limitations
 

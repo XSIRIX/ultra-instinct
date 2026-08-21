@@ -37,6 +37,24 @@ export async function handleRuntimeEvent(event, options = {}) {
       ? options.bootstrap ?? (await loadBootstrap(options.pluginRoot))
       : null;
     const persistent = Boolean(normalized.sessionId && normalized.workspace);
+
+    if (normalized.client === "codex") {
+      if (persistent && needsBootstrap) {
+        const store = options.stateStore ?? createStateStore({
+          stateDir: options.stateDir ?? resolveStateDir(normalized.workspace),
+          clock: options.clock,
+          warningSink: options.warningSink,
+        });
+        store.delete(stateKey(normalized));
+      }
+      return {
+        allow: true,
+        context: bootstrap?.context ?? null,
+        warning: profileWarning,
+        continueSession: false,
+      };
+    }
+
     const store = options.stateStore ?? createStateStore({
       stateDir: options.stateDir ?? resolveStateDir(normalized.workspace),
       clock: options.clock,
