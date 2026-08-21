@@ -64,3 +64,24 @@ test("current-source research is mandatory, bounded, and reused", async () => {
     assert.match(skill, /pinned version/i);
   }
 });
+
+test("grilling resolves a decision frontier before design specification", async () => {
+  const [brainstorm, grilling, designSpec] = await Promise.all([
+    readFile(path.join(root, "skills/brainstorm/SKILL.md"), "utf8"),
+    readFile(path.join(root, "skills/grilling/SKILL.md"), "utf8"),
+    readFile(path.join(root, "skills/write-design-spec/SKILL.md"), "utf8"),
+  ]);
+
+  assert.match(brainstorm, /grilling.+before.+write-design-spec/is);
+  assert.match(grilling, /decision tree/i);
+  assert.match(grilling, /frontier/i);
+  assert.match(grilling, /number.+title/is);
+  assert.match(grilling, /recommend(?:ed|ation)/i);
+  assert.match(grilling, /codebase|workspace/i);
+  assert.match(grilling, /primary documentation|current documentation/i);
+  assert.match(grilling, /user decides/i);
+  assert.match(grilling, /frontier is empty|empty frontier/i);
+  assert.match(grilling, /explicit(?:ly)? confirm/i);
+  assert.match(designSpec, /confirmed grilling brief|confirmed conversation/i);
+  assert.match(designSpec, /without re-interviewing|do not re-interview/i);
+});

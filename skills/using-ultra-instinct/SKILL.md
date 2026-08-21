@@ -16,6 +16,7 @@ One primary agent owns the task and its final result. Delegate only independent 
 
 - Unsettled goal, behavior, or approach: `brainstorm`.
 - Visual layout, screen, or flow decision: `mockup`.
+- Proposed design needs its choices and failure cases pressure-tested: `grilling`.
 - Agreed design that needs a durable spec: `write-design-spec`.
 - Approved spec or clear requirements that need build tasks: `write-plan`.
 - Tracked artifact or implementation needs isolation: `isolate-work`.
@@ -29,6 +30,6 @@ One primary agent owns the task and its final result. Delegate only independent 
 - Reviewed, green branch needs to land: `finish-branch`.
 - Questions about this suite or routing: `using-ultra-instinct`.
 
-Do not restart at `brainstorm` when a valid spec or plan already exists. Inputs may come from another session or document. Ask once only when the entry point materially changes the work.
+Do not restart at `brainstorm` when a valid grilling brief, spec, or plan already exists. Inputs may come from another session or document. Ask once only when the entry point materially changes the work.
 
 For implementation, use fresh library docs, tests before production changes, and fresh evidence before completion. Ultra Instinct guidance never outranks the user's direct request.

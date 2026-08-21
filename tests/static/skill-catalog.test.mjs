@@ -9,6 +9,7 @@ const EXPECTED = [
   "capture-artifact",
   "execute-plan",
   "finish-branch",
+  "grilling",
   "isolate-work",
   "mockup",
   "receiving-code-review",
@@ -23,10 +24,16 @@ const EXPECTED = [
 
 const root = path.resolve(import.meta.dirname, "../..");
 
-test("the canonical catalog contains exactly fourteen skills", () => {
+test("the canonical catalog contains exactly fifteen skills", () => {
   const result = validateSkillLayout(root);
   assert.deepEqual(result.errors, []);
   assert.deepEqual(result.names.sort(), EXPECTED);
+});
+
+test("grilling defines when to enter and when to skip the workflow", () => {
+  const skill = readSkillFrontmatter(path.join(root, "skills/grilling/SKILL.md"));
+  assert.match(skill.description, /Use when/);
+  assert.match(skill.description, /Do not/);
 });
 
 for (const name of ["systematic-debugging", "verification-before-completion", "receiving-code-review"]) {

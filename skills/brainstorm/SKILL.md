@@ -55,6 +55,6 @@ Cover what's relevant: the pieces and their boundaries, how data moves, what hap
 
 ## Ending
 
-If the user wants it built, use `write-design-spec` — it saves the agreed design under ignored `.ultra-instinct/design/` and the implementation moves onto its own branch. Publish the spec only when the user explicitly asks.
+If the user wants it built, use `grilling` to pressure-test the selected direction before `write-design-spec`. A design that already has an empty decision frontier and explicit user confirmation may go directly to `write-design-spec`. The spec stays under ignored `.ultra-instinct/design/` until the user explicitly asks to publish it.
 
 If it was just thinking, stop here. Ask which it is if it's unclear; don't assume the first.

@@ -10,12 +10,13 @@ async function text(file) {
 }
 
 test("generated artifacts default to one ignored local workspace", async () => {
-  const [gitignore, design, plan, mockup, brainstorm, isolation, evalGuide, harborGuide, durableArtifact, ...evalClients] = await Promise.all([
+  const [gitignore, design, plan, mockup, brainstorm, grilling, isolation, evalGuide, harborGuide, durableArtifact, ...evalClients] = await Promise.all([
     text(".gitignore"),
     text("skills/write-design-spec/SKILL.md"),
     text("skills/write-plan/SKILL.md"),
     text("skills/mockup/SKILL.md"),
     text("skills/brainstorm/SKILL.md"),
+    text("skills/grilling/SKILL.md"),
     text("skills/isolate-work/SKILL.md"),
     text("evals/README.md"),
     text("evals/harbor/README.md"),
@@ -34,6 +35,11 @@ test("generated artifacts default to one ignored local workspace", async () => {
   assert.match(mockup, /\.ultra-instinct\/mockups\/<topic>/);
   assert.match(brainstorm, /\.ultra-instinct\/mockups\/<topic>/);
   assert.doesNotMatch(brainstorm, /temp directory outside the repo/i);
+  assert.match(grilling, /\.ultra-instinct\/grills\/YYYY-MM-DD\/<topic>\.md/);
+  assert.match(grilling, /outside (?:a )?(?:project|repository)/i);
+  assert.match(grilling, /create no file|do not create a file/i);
+  assert.match(grilling, /do not (?:silently |automatically )?(?:edit|write|change).+CONTEXT\.md/is);
+  assert.match(grilling, /ADR/i);
   assert.match(isolation, /ignored specs and plans do not require isolation/i);
   assert.match(evalGuide, /\.ultra-instinct\/evals\/<label>/);
   assert.match(harborGuide, /\.ultra-instinct\/harbor\/smoke-001/);

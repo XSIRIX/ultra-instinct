@@ -1,11 +1,13 @@
 ---
 name: write-design-spec
-description: Use when a design has been agreed and the work is going to be built — captures the design and its requirements as a local artifact, including the references and mockups it was grounded in. Covers system design and frontend design alike. Follows brainstorm, precedes write-plan.
+description: Use when a design has been explicitly confirmed and the work is going to be built — captures the design and its requirements as a local artifact, including the references and mockups it was grounded in. Covers system design and frontend design alike. Follows grilling, precedes write-plan.
 ---
 
 # Write Design Spec
 
 Lock the agreed design into a document. This is where a conversation becomes a commitment.
+
+Start from a confirmed grilling brief or confirmed conversation. Read that source fully, preserve its decisions and references, and synthesize it without re-interviewing the user. If material decisions remain unresolved or the user has not explicitly confirmed the shared design, return to `grilling` instead of guessing.
 
 Covers whatever kind of design the work needed — system architecture, a data model, a frontend surface, an API contract, or all of them. The document holds the design *and* the requirements it has to satisfy.
 

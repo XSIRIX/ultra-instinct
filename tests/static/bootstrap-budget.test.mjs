@@ -25,3 +25,11 @@ test("the canonical router matches every coding task as the Desktop fallback", (
   const router = readSkillFrontmatter(path.join(root, "skills/using-ultra-instinct/SKILL.md"));
   assert.match(router.description, /start of any coding task/i);
 });
+
+test("the canonical router places grilling between approach selection and specification", () => {
+  const router = readSkillFrontmatter(path.join(root, "skills/using-ultra-instinct/SKILL.md"));
+  const brainstorm = router.body.indexOf("`brainstorm`");
+  const grilling = router.body.indexOf("`grilling`");
+  const designSpec = router.body.indexOf("`write-design-spec`");
+  assert.ok(brainstorm >= 0 && grilling > brainstorm && designSpec > grilling);
+});
